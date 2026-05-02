@@ -437,6 +437,73 @@ def extract_pricing():
     result, status_code = _process_extract_pricing(image_reference, book_data)
     return jsonify(result), status_code
 
+def _process_signature_detection(image_reference):
+    """AI logic for detecting handwritten signatures on a title page."""
+    if not image_reference:
+        return {"error": "Missing image reference"}, 400
+
+    logger.info(f"Processing signature detection for: {image_reference}")
+    
+    temp_path = None
+    try:
+        temp_path = download_image_to_temp(image_reference)
+        uploaded_file = genai.upload_file(path=temp_path, mime_type="image/jpeg")
+        
+        prompt = """
+        Act as SignatureVision (SpineVision Authentication Expert). 
+        Analyze this image of a book's title page or inside cover. 
+        Determine if there is a handwritten signature or inscription.
+        
+        Return ONLY a valid JSON object:
+        {
+          "is_signed": boolean,
+          "confidence_score": 0.0 to 1.0,
+          "signer_name": "string or 'Unknown'",
+          "inscription_text": "string (transcript of any personalized note)",
+          "authenticity_notes": "string (e.g. 'Matches known Hemingway signatures' or 'Looks like a stamp')"
+        }
+        """
+        
+        try:
+            signature_data = generate_json_with_retry(vision_model, [prompt, uploaded_file])
+        except json.JSONDecodeError as parse_err:
+            return {
+                "error": {
+                    "error_type": "AI_RESPONSE_FORMAT_ERROR",
+                    "message": "The AI model returned improperly formatted data.",
+                    "retryable": True,
+                    "suggested_action": "RETRY"
+                }
+            }, 502
+            
+        return {"status": "success", "data": signature_data}, 200
+        
+    except Exception as e:
+        logger.error(f"Signature detection failed: {e}", exc_info=True)
+        return {
+            "error": {"error_type": "GEMINI_API_ERROR", "message": "The AI model is temporarily unavailable.", "retryable": True}
+        }, 503
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            try: os.remove(temp_path)
+            except: pass
+
+@app.route('/analyze_signature', methods=['POST'])
+def analyze_signature():
+    """Endpoint for handwritten signature detection."""
+    user_id = get_authenticated_uid()
+    user_tier = get_user_tier(user_id)
+    
+    # SignatureVision restricted to Pro and Enterprise
+    if user_tier == "Hobbyist" and user_id != "anonymous-user":
+        return jsonify({"error": "This feature is restricted to Pro and Enterprise users."}), 403
+        
+    data = request.get_json() or {}
+    image_reference = data.get('image_reference')
+    
+    result, status_code = _process_signature_detection(image_reference)
+    return jsonify(result), status_code
+
 def _process_analyze_condition(image_reference):
     """Core logic for analyzing book condition from an image, callable internally."""
     if not image_reference:

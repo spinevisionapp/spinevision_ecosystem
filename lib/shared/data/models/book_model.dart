@@ -20,6 +20,8 @@ class BookModel with _$BookModel {
     @Default({}) Map<String, ListingStatus> listingStatuses,
     DateTime? lastMarketCheck,
     double? previousValue,
+    @Default(false) bool isSigned,
+    String? signatureImageRef,
   }) = _BookModel;
 
   factory BookModel.fromJson(Map<String, dynamic> json) => _$BookModelFromJson(json);

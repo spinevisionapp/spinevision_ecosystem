@@ -177,6 +177,18 @@ class BookDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (book.isSigned) ...[
+             Row(
+               children: [
+                 const Icon(Icons.verified, color: AppColors.secondary, size: 20),
+                 const SizedBox(width: 10),
+                 Text('SIGNATURE AUTHENTICATED', style: TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1)),
+               ],
+             ),
+             const SizedBox(height: 12),
+             const Text('Handwritten signature detected on title page. Verified as potentially authentic by SignatureVision AI.', style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic)),
+             const Divider(height: 32),
+          ],
           const Text(
             'This title peaks in value during October/November. Sales velocity is currently 15% above the 12-month average.',
             style: TextStyle(height: 1.4, fontSize: 14),

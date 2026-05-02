@@ -160,4 +160,9 @@ class BookRepository {
     final response = await _apiService.getSocialPosts();
     return response['data'] ?? {};
   }
+
+  Future<Map<String, dynamic>> analyzeSignature(String uri) async {
+    final response = await _apiService.analyzeSignature(uri);
+    return response['data'] ?? {};
+  }
 }

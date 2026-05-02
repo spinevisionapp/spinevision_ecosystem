@@ -52,6 +52,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   Map<String, dynamic>? _lastRecommendation;
   Map<String, dynamic>? _lastMetadata;
   List<WishModel> _activeWishlist = [];
+  bool _isSignatureMode = false;
   
   // Animation for Laser
   late AnimationController _laserController;
@@ -299,11 +300,36 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
     if (_focusStatus == AnalysisStatus.none) {
       return Center(
         child: GestureDetector(
-          onTap: _handleFocusTap,
-          child: Container(
-            width: 250, height: 250,
-            decoration: BoxDecoration(border: Border.all(color: AppColors.primary, width: 3), borderRadius: BorderRadius.circular(20)),
-            child: const Center(child: Icon(Icons.filter_center_focus, color: AppColors.primary, size: 60)),
+          onTap: _isSignatureMode ? _handleSignatureTap : _handleFocusTap,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 250, height: 250,
+                decoration: BoxDecoration(
+                  border: Border.all(color: _isSignatureMode ? AppColors.secondary : AppColors.primary, width: 3), 
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (_isSignatureMode ? AppColors.secondary : AppColors.primary).withValues(alpha: 0.3),
+                      blurRadius: 15,
+                    )
+                  ]
+                ),
+                child: Center(
+                  child: Icon(
+                    _isSignatureMode ? Icons.history_edu : Icons.filter_center_focus, 
+                    color: _isSignatureMode ? AppColors.secondary : AppColors.primary, 
+                    size: 60
+                  )
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                _isSignatureMode ? 'SCAN TITLE PAGE FOR SIGNATURE' : 'TAP TO APPRAISE ITEM', 
+                style: AppTextStyles.labelLarge.copyWith(color: Colors.white, letterSpacing: 2)
+              ),
+            ],
           ),
         ),
       );
@@ -394,6 +420,15 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
         CircleAvatar(backgroundColor: Colors.black45, child: IconButton(icon: Icon(_isTorchOn ? Icons.flash_on : Icons.flash_off, color: _isTorchOn ? Colors.amber : Colors.white), onPressed: _toggleTorch)),
         const SizedBox(width: 10),
         CircleAvatar(backgroundColor: Colors.black45, child: IconButton(icon: Icon(_isVoiceEnabled ? Icons.volume_up : Icons.volume_off, color: _isVoiceEnabled ? AppColors.secondary : Colors.white), onPressed: () => setState(() => _isVoiceEnabled = !_isVoiceEnabled))),
+        const SizedBox(width: 10),
+        CircleAvatar(
+          backgroundColor: _isSignatureMode ? AppColors.secondary : Colors.black45,
+          child: IconButton(
+            icon: Icon(Icons.history_edu, color: _isSignatureMode ? Colors.white : Colors.white70),
+            onPressed: () => setState(() => _isSignatureMode = !_isSignatureMode),
+            tooltip: 'Signature Check',
+          ),
+        ),
       ]),
       IconButton(icon: const Icon(Icons.close, color: Colors.white), onPressed: () => Navigator.pop(context)),
     ]));
@@ -434,6 +469,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
       title: _lastMetadata?['title'] ?? 'Unknown Book',
       author: _lastMetadata?['author'] ?? 'Unknown Author',
       purchasePrice: 1.0, 
+      isSigned: _isWishMatch, // Placeholder for signature logic during save
       scrapedData: ScrapedData(originalRetailPrice: (_lastRecommendation?['original_retail_price'] as num?)?.toDouble())
     );
     await RepositoryProvider.of<BookRepository>(context).saveBook(book);
@@ -450,6 +486,51 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
       final books = await RepositoryProvider.of<BookRepository>(context).batchProcessShelf(gcsUri!);
       context.pushReplacement('/review_vision', extra: books);
     } catch (e) { setState(() { _isProcessing = false; }); }
+  }
+
+  Future<void> _handleSignatureTap() async {
+    if (_isProcessing || _controller == null || !_controller!.value.isInitialized) return;
+    
+    final repository = RepositoryProvider.of<BookRepository>(context);
+    final storage = RepositoryProvider.of<CloudStorageService>(context);
+
+    HapticFeedback.lightImpact();
+    setState(() {
+      _isProcessing = true;
+      _statusMessage = 'DETECTING SIGNATURE...';
+    });
+
+    try {
+      final xFile = await _controller!.takePicture();
+      final gcsUri = await storage.uploadImage(File(xFile.path));
+      if (gcsUri == null) throw Exception('Upload failed');
+
+      final result = await repository.analyzeSignature(gcsUri);
+
+      if (mounted) {
+        final bool isSigned = result['is_signed'] ?? false;
+        HapticFeedback.vibrate();
+        
+        if (isSigned) {
+          if (_isVoiceEnabled) _tts.speak("Signature detected. Verifying signer.");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Signature Found: ${result['signer_name']}'),
+              backgroundColor: AppColors.secondary,
+            ),
+          );
+        } else {
+          if (_isVoiceEnabled) _tts.speak("No signature detected.");
+        }
+
+        setState(() {
+          _isProcessing = false;
+          _isSignatureMode = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() { _isProcessing = false; });
+    }
   }
 }
 

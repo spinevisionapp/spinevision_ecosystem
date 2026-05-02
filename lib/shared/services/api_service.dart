@@ -122,4 +122,8 @@ class ApiService {
   Future<Map<String, dynamic>> repriceInventory(List<Map<String, dynamic>> inventory) async {
     return post('/reprice_vision', {'inventory': inventory});
   }
+
+  Future<Map<String, dynamic>> analyzeSignature(String imageReference) async {
+    return post('/analyze_signature', {'image_reference': imageReference});
+  }
 }
