@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpineVision - AI Chatbot</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #chat-container { max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 5px; }
+        #chat-history { height: 400px; overflow-y: auto; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; }
+        .message { margin-bottom: 10px; }
+        .user-message { text-align: right; color: #333; }
+        .bot-message { text-align: left; color: #007bff; }
+        #chat-input { display: flex; }
+        #question { flex-grow: 1; padding: 8px; }
+        #ask-button { padding: 8px 15px; }
+    </style>
+</head>
+<body>
+    <h1>SpineVision AI Chatbot</h1>
+    <div id="chat-container">
+        <div id="chat-history"></div>
+        <div id="chat-input">
+            <input type="text" id="question" placeholder="Ask about SpineVision features...">
+            <button id="ask-button">Ask</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('ask-button').addEventListener('click', askChatbot);
+        document.getElementById('question').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                askChatbot();
+            }
+        });
+
+        async function askChatbot() {
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value;
+            if (!question) return;
+
+            const chatHistory = document.getElementById('chat-history');
+            
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user-message';
+            userMessage.textContent = `You: ${question}`;
+            chatHistory.appendChild(userMessage);
+
+            const response = await fetch('/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question }),
+            });
+
+            const data = await response.json();
+            
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot-message';
+            botMessage.textContent = `Bot: ${data.answer}`;
+            chatHistory.appendChild(botMessage);
+
+            questionInput.value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    </script>
+</body>
+</html>

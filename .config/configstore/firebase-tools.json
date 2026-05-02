@@ -1,0 +1,17 @@
+{
+	"apiEnablementCache": {
+		"spinevision-6abad": {
+			"cloudresourcemanager.googleapis.com": true,
+			"fcm.googleapis.com": true,
+			"cloudfunctions.googleapis.com": true,
+			"identitytoolkit.googleapis.com": true,
+			"firebaseremoteconfig.googleapis.com": true,
+			"storage.googleapis.com": true,
+			"firebaseappdistribution.googleapis.com": true,
+			"firestore.googleapis.com": true
+		}
+	},
+	"activeProjects": {
+		"/home/lcjones907": "spinevision-6abad"
+	}
+}

@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpineVision - FAQ</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        .faq-item { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 15px; }
+        h2 { color: #333; }
+        p { color: #555; }
+    </style>
+</head>
+<body>
+    <h1>SpineVision FAQ</h1>
+    <div id="faq-container">
+        {% for item in faqs %}
+        <div class="faq-item">
+            <h2>{{ item.question }}</h2>
+            <p>{{ item.answer }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

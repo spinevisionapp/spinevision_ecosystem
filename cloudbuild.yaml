@@ -1,0 +1,66 @@
+steps:
+  # --- Backend Deployment (Cloud Run) ---
+  # Step 1: Run Unit Tests
+  - name: 'python:3.10-slim'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install -r requirements.txt
+        pytest test_main.py -v
+
+  # Step 2: Build the Docker Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/orchestrator:${COMMIT_SHA}', '.']
+
+  # Step 3: Push the Image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/orchestrator:${COMMIT_SHA}']
+
+  # Step 4: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'spinevision-orchestrator'
+      - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/orchestrator:${COMMIT_SHA}'
+      - '--region=${_REGION}'
+      - '--service-account=orchestrator-sa@${PROJECT_ID}.iam.gserviceaccount.com'
+      - '--min-instances=1'
+      - '--max-instances=100'
+      - '--set-secrets=GEMINI_API_KEY=projects/${PROJECT_ID}/secrets/GEMINI_API_KEY:latest,FIREBASE_PROJECT_ID=projects/${PROJECT_ID}/secrets/FIREBASE_PROJECT_ID:latest'
+      - '--allow-unauthenticated'
+
+  # --- Frontend Deployment (Firebase Hosting) ---
+  # Step 5: Run Flutter Analysis
+  - name: 'ghcr.io/cirruslabs/flutter:stable'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        flutter pub get
+        flutter analyze
+
+  # Step 6: Build Flutter Web
+  - name: 'ghcr.io/cirruslabs/flutter:stable'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        flutter build web --release
+
+  # Step 7: Deploy to Firebase Hosting
+  - name: 'gcr.io/${PROJECT_ID}/firebase'
+    args: ['deploy', '--only', 'hosting', '--project', '${PROJECT_ID}']
+
+images:
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/orchestrator:${COMMIT_SHA}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _REGION: us-central1
+  _REPO_NAME: spinevision-repo
+

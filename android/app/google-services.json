@@ -1,0 +1,28 @@
+{
+  "project_info": {
+    "project_number": "590372870511",
+    "project_id": "spinevision-6abad",
+    "storage_bucket": "spinevision-6abad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590372870511:android:7c0edb542f56c694ae709a",
+        "android_client_info": {
+          "package_name": "com.mycompany.spinevision"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

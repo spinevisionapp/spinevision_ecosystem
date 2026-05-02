@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpineVision - View Ticket</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .ticket-details, .ticket-response { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        textarea { width: 100%; padding: 8px; }
+        button { padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ticket Details</h1>
+        <div class="ticket-details">
+            <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+            <p><strong>User ID:</strong> {{ ticket.user_id }}</p>
+            <p><strong>Status:</strong> {{ ticket.status }}</p>
+            <p><strong>Message:</strong></p>
+            <p>{{ ticket.message }}</p>
+        </div>
+
+        <div class="ticket-response">
+            <h2>Respond to Ticket</h2>
+            <form action="/ticket/{{ ticket.id }}/respond" method="post">
+                <div class="form-group">
+                    <label for="response">Response</label>
+                    <textarea id="response" name="response" rows="6" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="status">Update Status</label>
+                    <select id="status" name="status">
+                        <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %}>Open</option>
+                        <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Closed" {% if ticket.status == 'Closed' %}selected{% endif %}>Closed</option>
+                    </select>
+                </div>
+                <button type="submit">Submit Response</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+# Swagger/OpenAPI v2 specification for SpineVision's API Gateway.
+# This file defines the public-facing API, including routes, authentication,
+# and backend configuration for routing to the Cloud Run orchestrator.
+swagger: '2.0'
+info:
+  title: 'SpineVision API'
+  description: 'API for the SpineVision ecosystem, routing to the AI orchestrator.'
+  version: '1.0.0'
+
+# The hostname of the API Gateway. This is auto-generated on deployment.
+host: 'spinevision-api.endpoints.YOUR_PROJECT_ID.cloud.goog'
+schemes:
+  - 'https'
+produces:
+  - 'application/json'
+
+# ----------------------------------------------------------------------
+# Section 1: Backend Configuration & CORS
+# ----------------------------------------------------------------------
+x-google-backend:
+  # The address of the backend service (your Cloud Run orchestrator).
+  address: 'https://spinevision-orchestrator-YOUR_REGION-PROJECT_HASH.a.run.app'
+  # Enable CORS to allow requests from the FlutterFlow web app.
+  # The `allow_cors` option automatically handles preflight (OPTIONS) requests.
+  allow_cors: true
+
+# ----------------------------------------------------------------------
+# Section 2: Authentication
+# ----------------------------------------------------------------------
+securityDefinitions:
+  # Defines the Firebase JWT authentication security scheme.
+  # API Gateway will use this to validate incoming Bearer tokens.
+  firebase:
+    authorizationUrl: ''
+    flow: 'implicit'
+    type: 'oauth2'
+    # x-google-issuer, x-google-jwks_uri, and x-google-audiences are
+    # the key fields for JWT validation.
+    x-google-issuer: 'https://securetoken.google.com/YOUR_FIREBASE_PROJECT_ID'
+    x-google-jwks_uri: 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com'
+    x-google-audiences: 'YOUR_FIREBASE_PROJECT_ID'
+
+# Global security requirement. All endpoints will require Firebase auth
+# unless explicitly overridden at the path level.
+security:
+  - firebase: []
+
+# ----------------------------------------------------------------------
+# Section 3: API Routes (Paths)
+# ----------------------------------------------------------------------
+paths:
+  # A public health check endpoint that does not require authentication.
+  # Useful for uptime monitoring.
+  '/health':
+    get:
+      summary: 'Health check'
+      operationId: 'healthCheck'
+      security: [] # No security for this endpoint
+      responses:
+        '200':
+          description: 'Service is healthy'
+
+  # All orchestrator endpoints are defined below. They all use POST.
+  # The operationId maps to the function in the orchestrator.
+  # The path is what the client will call.
+  '/extract_metadata':
+    post:
+      summary: 'Extracts book metadata from an image.'
+      operationId: 'extractMetadata'
+      responses:
+        '200': { description: 'Success' }
+
+  '/extract_pricing':
+    post:
+      summary: 'Extracts pricing information for a book.'
+      operationId: 'extractPricing'
+      responses:
+        '200': { description: 'Success' }
+
+  '/analyze_condition':
+    post:
+      summary: 'Analyzes the condition of a book from an image.'
+      operationId: 'analyzeCondition'
+      responses:
+        '200': { description: 'Success' }
+
+  '/batch_process_shelf':
+    post:
+      summary: 'Processes a batch of book spines from an image.'
+      operationId: 'batchProcessShelf'
+      responses:
+        '200': { description: 'Success' }
+
+  '/generate_listing':
+    post:
+      summary: 'Generates a marketplace listing for a book.'
+      operationId: 'generateListing'
+      responses:
+        '200': { description: 'Success' }
+
+  '/library_catalog':
+    post:
+      summary: "Catalogs a book into the user's library from an image."
+      operationId: 'libraryCatalog'
+      responses:
+        '200': { description: 'Success' }
+
+  '/buy_decision':
+    post:
+      summary: 'Provides a buy/no-buy recommendation for a scanned book.'
+      operationId: 'buyDecision'
+      responses:
+        '200': { description: 'Success' }
+
+  '/analytics_enrichment':
+    post:
+      summary: 'Enriches analytics data with AI-driven insights.'
+      operationId: 'analyticsEnrichment'
+      responses:
+        '200': { description: 'Success' }

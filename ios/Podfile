@@ -1,0 +1,34 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '13.0'
+
+# CocoaPods analytics sends network stats synchronously affecting build performance.
+ENV['COCOAPODS_DISABLE_STATS'] = '1'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Release' => :release,
+  'Profile' => :profile,
+}
+
+def flutter_install_all_ios_pods(main_target_directory)
+  podfile_dir = File.dirname(File.realpath(__FILE__))
+  File.open(File.join(main_target_directory, '.flutter-plugins-dependencies'), 'r') do |f|
+    package_json = JSON.parse(f.read)
+    package_json['plugins']['ios'].each do |plugin|
+      pod plugin['name'], :path => File.join(plugin['path'], 'ios')
+    end
+  end
+end
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end

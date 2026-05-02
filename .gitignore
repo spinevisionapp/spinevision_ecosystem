@@ -1,0 +1,45 @@
+# Large System/Cache Folders
+.gradle/
+.cache/
+.pub-cache/
+.dart_tool/
+.dartServer/
+.npm/
+.nvm/
+.android/
+.codeoss/
+.gemini/
+.local/
+.rustup/
+build/
+
+# Flutter/Dart
+.flutter-plugins
+.flutter-plugins-dependencies
+ios/Flutter/.last_build_id
+*.freezed.dart
+*.g.dart
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+.env
+.pytest_cache/
+*.log
+
+# Firebase/Cloud Code
+.firebase/
+.firebaserc
+
+# IDEs and System
+.idea/
+.vscode/
+.DS_Store
+*.iml
+*.ipr
+*.iws
+.history/
