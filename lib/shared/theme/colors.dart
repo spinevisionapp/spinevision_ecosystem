@@ -31,6 +31,8 @@ class AppColors {
   static const Color appBarBackground = Color(0xFF6F167A);
   static const Color appBarForeground = Color(0xFFFFFFFF);
   static const Color dividerColor = Color(0xFFE0E0E0);
+  static const Color mediumGrey = Color(0xFF9E9E9E);
+  static const Color lightGrey = Color(0xFFF5F5F5);
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(

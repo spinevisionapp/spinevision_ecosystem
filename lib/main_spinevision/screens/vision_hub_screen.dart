@@ -290,7 +290,10 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
                 },
               ),
             );
-          },
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -324,7 +327,6 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
         color = AppColors.primary;
         break;
       case ListingStatus.none:
-      default:
         color = Colors.grey.shade300;
         break;
     }

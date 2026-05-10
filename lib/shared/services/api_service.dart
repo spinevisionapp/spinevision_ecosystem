@@ -113,11 +113,6 @@ class ApiService {
   Future<Map<String, dynamic>> optimizeBox(List<Map<String, dynamic>> inventory, double currentWeight) async {
     return post('/box_optimizer', {'inventory': inventory, 'current_weight': currentWeight});
   }
-  }
-
-  Future<Map<String, dynamic>> optimizeBox(List<Map<String, dynamic>> inventory, double currentWeight) async {
-    return post('/box_optimizer', {'inventory': inventory, 'current_weight': currentWeight});
-  }
 
   Future<Map<String, dynamic>> repriceInventory(List<Map<String, dynamic>> inventory) async {
     return post('/reprice_vision', {'inventory': inventory});

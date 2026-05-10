@@ -43,7 +43,7 @@ class _ReviewVisionScreenState extends State<ReviewVisionScreen> {
   void _onImport() {
     final booksToImport = _books.where((b) => _selectedIds.contains(b.id ?? '')).toList();
 
-    final totalValue = booksToImport.fold<double>(0, (sum, b) => sum + ((b.listingDetails?['suggestedListPrice'] as num?)?.toDouble() ?? 0.0));
+    final totalValue = booksToImport.fold<double>(0, (sum, b) => sum + (b.scrapedData?.originalRetailPrice ?? 0.0));
 
     final repository = RepositoryProvider.of<BookRepository>(context);
     repository.saveBooks(booksToImport);
@@ -51,7 +51,7 @@ class _ReviewVisionScreenState extends State<ReviewVisionScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Imported ${booksToImport.length} items. Total value: \$${totalValue.toStringAsFixed(2)}'),
-        backgroundColor: AppColors.primaryTeal,
+        backgroundColor: AppColors.secondary,
       ),
     );
     Navigator.of(context).pop();
@@ -61,7 +61,7 @@ class _ReviewVisionScreenState extends State<ReviewVisionScreen> {
   Widget build(BuildContext context) {
     final totalPotentialValue = _books
         .where((b) => _selectedIds.contains(b.id ?? ''))
-        .fold<double>(0, (sum, b) => sum + ((b.listingDetails?['suggestedListPrice'] as num?)?.toDouble() ?? 0.0));
+        .fold<double>(0, (sum, b) => sum + (b.scrapedData?.originalRetailPrice ?? 0.0));
 
     return Scaffold(
       appBar: AppBar(
@@ -176,7 +176,7 @@ class _ReviewVisionScreenState extends State<ReviewVisionScreen> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '\$${(book.listingDetails?['suggestedListPrice'] as num?)?.toStringAsFixed(2) ?? "0.00"}',
+                                      '\$${(book.scrapedData?.originalRetailPrice ?? 0.0).toStringAsFixed(2)}',
                                       style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold),
                                     ),
                                   ],

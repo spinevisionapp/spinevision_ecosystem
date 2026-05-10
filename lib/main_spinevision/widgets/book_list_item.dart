@@ -118,7 +118,6 @@ class BookListItem extends StatelessWidget {
         color = AppColors.primary;
         break;
       case ListingStatus.none:
-      default:
         color = Colors.grey.shade300;
         break;
     }

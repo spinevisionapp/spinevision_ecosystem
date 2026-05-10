@@ -22,6 +22,7 @@ class BookModel with _$BookModel {
     double? previousValue,
     @Default(false) bool isSigned,
     String? signatureImageRef,
+    String? titleLowercase,
   }) = _BookModel;
 
   factory BookModel.fromJson(Map<String, dynamic> json) => _$BookModelFromJson(json);
@@ -111,7 +112,7 @@ class WishModel with _$WishModel {
 }
 
 @freezed
-class BundleModel with _$WishModel {
+class BundleModel with _$BundleModel {
   const factory BundleModel({
     String? id,
     required String bundleTitle,

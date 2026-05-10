@@ -84,6 +84,10 @@ class _LibraryVisionScreenState extends State<LibraryVisionScreen> {
   Widget _buildSearchBar() {
     return Container(
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.primaryBackground,
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)],
+      ),
       child: TextField(
         controller: _searchController,
         onChanged: (v) => setState(() {}),
@@ -94,7 +98,6 @@ class _LibraryVisionScreenState extends State<LibraryVisionScreen> {
           fillColor: Colors.white,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
           contentPadding: const EdgeInsets.symmetric(vertical: 0),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)],
         ),
       ),
     );

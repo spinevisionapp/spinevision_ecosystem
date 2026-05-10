@@ -131,9 +131,9 @@ class _MarketingVisionScreenState extends State<MarketingVisionScreen> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Icon(Icons.instagram, size: 18, color: Colors.grey),
+                    const Icon(Icons.camera_alt, size: 18, color: Colors.grey),
                     const SizedBox(width: 12),
-                    const Icon(Icons.facebook, size: 18, color: Colors.grey),
+                    const Icon(Icons.public, size: 18, color: Colors.grey),
                     const SizedBox(width: 12),
                     const Icon(Icons.movie_creation_outlined, size: 18, color: Colors.grey),
                     const Spacer(),

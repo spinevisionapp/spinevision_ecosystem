@@ -50,8 +50,14 @@ class FirestoreService {
   // --- INVENTORY (OMNIVISION / VISIONHUB / LIBRARY) ---
 
   Future<void> saveBook(BookModel book) async {
-    final docRef = _inventoryRef.doc(book.id ?? book.isbn);
-    await docRef.set(book.toJson(), SetOptions(merge: true));
+    // Normalization: ISBN to uppercase (for 'X'), title to lowercase for search
+    final normalizedBook = book.copyWith(
+      isbn: book.isbn.toUpperCase().trim(),
+      titleLowercase: book.title.toLowerCase().trim(),
+    );
+    
+    final docRef = _inventoryRef.doc(normalizedBook.id ?? normalizedBook.isbn);
+    await docRef.set(normalizedBook.toJson(), SetOptions(merge: true));
   }
 
   Stream<List<BookModel>> getInventoryStream() {
@@ -68,8 +74,13 @@ class FirestoreService {
   // --- LEDGER (TAXVISION) ---
 
   Future<void> saveExpense(ExpenseModel expense) async {
+    // Normalization: Category to Title Case for consistency in UI, but handle search as-is
+    final normalizedExpense = expense.copyWith(
+      category: expense.category.trim().toUpperCase(), // Store as 'COGS', 'SUPPLIES'
+    );
+    
     final docRef = _ledgerRef.doc();
-    await docRef.set(expense.toJson());
+    await docRef.set(normalizedExpense.toJson());
   }
 
   Stream<List<ExpenseModel>> getLedgerStream() {

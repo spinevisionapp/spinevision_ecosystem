@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spinevision_ecosystem/shared/data/repositories/book_repository.dart';
-import 'package:spinevision_ecosystem/shared/data/models/book_model.dart';
 import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 
 class SetVisionScreen extends StatefulWidget {

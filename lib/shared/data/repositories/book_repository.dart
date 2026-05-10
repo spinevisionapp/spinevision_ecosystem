@@ -47,6 +47,12 @@ class BookRepository {
     await _firestoreService.saveBook(book);
   }
 
+  Future<void> saveBooks(List<BookModel> books) async {
+    for (final book in books) {
+      await saveBook(book);
+    }
+  }
+
   Stream<List<BookModel>> getInventoryStream() {
     return _firestoreService.getInventoryStream();
   }
@@ -56,6 +62,33 @@ class BookRepository {
   }
 
   // --- LEDGER (TAXVISION) ---
+
+  double _ytdCogs = 0.0;
+  double _loggedMiles = 0.0;
+
+  double get ytdCogs => _ytdCogs;
+  double get loggedMiles => _loggedMiles;
+
+  void addCogs(double amount) {
+    _ytdCogs += amount;
+    saveExpense(ExpenseModel(
+      merchant: 'Manual Entry',
+      amount: amount,
+      date: DateTime.now(),
+      category: 'COGS',
+    ));
+  }
+
+  void addMileage(double miles) {
+    _loggedMiles += miles;
+    saveExpense(ExpenseModel(
+      merchant: 'GPS Log',
+      amount: miles * 0.67, // IRS standard rate approx
+      date: DateTime.now(),
+      category: 'Mileage',
+      notes: '${miles.toStringAsFixed(1)} miles recorded.',
+    ));
+  }
 
   Future<void> saveExpense(ExpenseModel expense) async {
     await _firestoreService.saveExpense(expense);
