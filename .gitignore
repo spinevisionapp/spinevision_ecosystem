@@ -43,3 +43,4 @@ ENV/
 *.ipr
 *.iws
 .history/
+.bash_history
