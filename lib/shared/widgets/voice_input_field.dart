@@ -4,10 +4,6 @@ import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 /// A reusable TextField wrapper that provides Omni-Modal input
 /// (Keyboard + Simulated Speech-to-Text).
 class VoiceInputField extends StatefulWidget {
-  final String label;
-  final String hintText;
-  final int maxLines;
-  final TextEditingController? controller;
 
   const VoiceInputField({
     super.key,
@@ -16,6 +12,10 @@ class VoiceInputField extends StatefulWidget {
     this.maxLines = 1,
     this.controller,
   });
+  final String label;
+  final String hintText;
+  final int maxLines;
+  final TextEditingController? controller;
 
   @override
   State<VoiceInputField> createState() => _VoiceInputFieldState();

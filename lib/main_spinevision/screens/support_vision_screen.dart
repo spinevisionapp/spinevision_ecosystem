@@ -97,7 +97,7 @@ class _SupportVisionScreenState extends State<SupportVisionScreen> {
       child: Center(
         child: Text(
           'CONNECTED TO $tier LEVEL AI ORCHESTRATOR',
-          style: AppTextStyles.labelMedium.copyWith(color: AppColors.primary, fontSize: 8),
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.primary, fontSize: 8, fontWeight: FontWeight.bold),
         ),
       ),
     );

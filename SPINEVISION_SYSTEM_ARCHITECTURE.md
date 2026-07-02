@@ -30,7 +30,7 @@ The SpineVision ecosystem is a **Decoupled Multi-Module Cloud-Native Architectur
     *   *SpatialVision:* Real-time AR walk-by scanning (Top).
 *   **AmazonVision:** Comprehensive Amazon FBA listing and logistics tool (Top).
 *   **ProfitVision:** Dashboard for tracking costs, profits, and sales history (Top).
-*   **TaxVision:** Automatic mileage logs and tax filing data (Top).
+*   **TaxVision:** Itemized receipt scanning, mileage logs, and tax filing data (Top).
 *   **ForecastVision:** Predictive seasonal and market trend cycle analytics (Top).
 *   **ChatVision:** Advanced AI support chatbot (Top).
 *   **BundleVision:** Resale bundle creation and ROI optimization (Top).
@@ -109,7 +109,7 @@ Advanced module for high-volume FBA sellers, introducing complex decision matric
 *   **SetVision:** ROI multiplier alerts when completing book series.
 *   **RefurbishVision:** AI-driven repair guides to upgrade condition grades.
 *   **VisionLocate:** AR-driven inventory mapping for bins and shelves.
-*   **TaxVision:** Automated COGS extraction and mileage tracking.
+*   **TaxVision:** Automated itemized COGS extraction and mileage tracking.
 
 ---
 

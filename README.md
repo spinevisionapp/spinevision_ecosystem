@@ -21,15 +21,18 @@ This repository contains the complete Flutter-based mobile app blueprint for the
 ├── lib
 │   ├── main.dart                   # Main app entry point
 │   ├── main_spinevision            # Code for the main SpineVision app
-│   │   ├── bloc
-│   │   ├── screens
-│   │   └── widgets
-│   ├── mini_placeholders           # Placeholder modules for future mini-apps
-│   │   ├── bundle_vision
-│   │   ├── listing_vision
-│   │   ├── price_vision
-│   │   ├── set_vision
-│   │   └── shelf_vision_pro
+│   │   ├── bloc                    # Feature-specific and global state management
+│   │   ├── features                # Integrated business modules
+│   │   │   ├── bundle_vision       # ROI Set Optimization
+│   │   │   ├── listing_vision      # AI Multi-channel Drafting
+│   │   │   ├── marketing_vision    # Social Media Automation
+│   │   │   ├── price_vision        # Real-time Market Analysis
+│   │   │   ├── set_vision          # Series Tracking
+│   │   │   ├── shelf_vision_pro    # Batch AI Scanning
+│   │   │   ├── support_vision      # AI Chatbot & Tiered Ticketing
+│   │   │   └── tax_vision          # Itemized Receipt Scanning & COGS
+│   │   ├── screens                 # Core UI Screens
+│   │   └── widgets                 # Main app components
 │   ├── mini_thriftvision           # Code for the ThriftVision mini-app
 │   │   └── screens
 │   └── shared                      # Shared code used across the ecosystem

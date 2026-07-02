@@ -16,8 +16,8 @@ You’re at a thrift store or a library sale. It's time to find gold.
 
 ### Step 1: Fast Scan (ThriftVision)
 *   Tap the **Camera Icon** on the navbar.
-*   Point your phone at a single book spine or cover.
-*   **The Magic:** AI identifies the title/author and immediately gives you a **BUY** or **PASS** recommendation based on real-time market data and your personal profit thresholds.
+*   Point your device's camera at a single book spine or cover, or upload an image from your device.
+*   **The Magic:** AI identifies the title/author and immediately gives you a **BUY** or **PASS** recommendation based on real-time market data and your personal profit thresholds. This works seamlessly whether you're using a phone, tablet, or a desktop with a webcam or image upload.
 
 ### Step 2: Bulk Digitizing (ShelfVision) - *Pro Feature*
 *   Facing a wall of 500 books? Switch to **Batch Mode**.
@@ -60,7 +60,7 @@ Keep every cent you earn.
 ### Step 7: Receipt Scanning (LedgerVision)
 *   Finished at the store? Tap **Scan Receipt** in the Profit tab.
 *   Take a photo of your paper receipt.
-*   **The Magic:** AI extracts the total spent, tax, and item count, automatically logging your **Cost of Goods Sold (COGS)** for tax season.
+*   **The Magic:** AI extracts the total spent, tax, and **detailed line items** (including unit prices and descriptions), automatically logging your **Cost of Goods Sold (COGS)** for every individual item.
 
 ### Step 8: Mileage Tracking
 *   Start the **GPS Tracker** when you leave your house.

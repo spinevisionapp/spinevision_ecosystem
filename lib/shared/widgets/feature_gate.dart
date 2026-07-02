@@ -5,9 +5,6 @@ import 'package:spinevision_ecosystem/shared/blocs/membership/membership_bloc.da
 enum VisionTier { free, mid, top }
 
 class FeatureGate extends StatelessWidget {
-  final Widget child;
-  final VisionTier requiredTier;
-  final Widget? lockedPlaceholder;
 
   const FeatureGate({
     super.key,
@@ -15,6 +12,9 @@ class FeatureGate extends StatelessWidget {
     required this.requiredTier,
     this.lockedPlaceholder,
   });
+  final Widget child;
+  final VisionTier requiredTier;
+  final Widget? lockedPlaceholder;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,8 @@ class FeatureGate extends StatelessWidget {
 }
 
 class _DefaultLockedUI extends StatelessWidget {
-  final VisionTier requiredTier;
   const _DefaultLockedUI({required this.requiredTier});
+  final VisionTier requiredTier;
 
   @override
   Widget build(BuildContext context) => const Center(child: Text('Upgrade to access this Vision module'));

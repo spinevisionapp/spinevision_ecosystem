@@ -13,18 +13,18 @@ class LibraryInitial extends LibraryState {}
 class LibraryLoading extends LibraryState {}
 
 class LibraryLoaded extends LibraryState {
-  final List<BookModel> books;
 
   const LibraryLoaded(this.books);
+  final List<BookModel> books;
 
   @override
   List<Object> get props => [books];
 }
 
 class LibraryError extends LibraryState {
-  final String message;
 
   const LibraryError(this.message);
+  final String message;
 
   @override
   List<Object> get props => [message];

@@ -21,12 +21,14 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchAnalytics();
+    // Disabled auto-fetch to stop the reset loop.
+    // User must click 'REFRESH' to load analytics.
   }
 
   Future<void> _fetchAnalytics() async {
+    setState(() => _isLoadingAnalytics = true);
     try {
-      final repository = RepositoryProvider.of<BookRepository>(context);
+      final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
       final analytics = await repository.getAnalytics();
       if (mounted) {
         setState(() {
@@ -46,7 +48,7 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final repository = RepositoryProvider.of<BookRepository>(context);
+    final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
     final tier = repository.currentTier;
 
     return DefaultTabController(
@@ -60,6 +62,13 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
             ),
           ),
           foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _fetchAnalytics,
+              tooltip: 'Refresh Analytics',
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Tab(text: 'INSIGHTS', icon: Icon(Icons.auto_awesome)),
@@ -187,7 +196,7 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
   Future<void> _runRepriceVision() async {
     setState(() => _isRepricing = true);
     try {
-      final repository = RepositoryProvider.of<BookRepository>(context);
+      final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
       final result = await repository.repriceInventory();
       if (mounted) {
         setState(() {

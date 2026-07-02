@@ -4,7 +4,6 @@ import 'library_event.dart';
 import 'library_state.dart';
 
 class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
-  final BookRepository _bookRepository;
 
   LibraryBloc(this._bookRepository) : super(LibraryInitial()) {
     on<LoadLibrary>((event, emit) async {
@@ -17,4 +16,5 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       }
     });
   }
+  final BookRepository _bookRepository;
 }

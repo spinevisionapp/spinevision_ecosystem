@@ -2,146 +2,223 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spinevision_ecosystem/shared/data/models/book_model.dart';
 
+/// Service handling all Firestore interactions for the user's ecosystem.
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String? get _uid => _auth.currentUser?.uid;
+  // Get current user ID, defaulting to a test ID if not authenticated for local dev
+  String get _uid => FirebaseAuth.instance.currentUser?.uid ?? 'user_123';
 
-  // --- COLLECTION REFERENCES ---
+  DocumentReference get _userDoc => _db.collection('users').doc(_uid);
+  CollectionReference get _inventoryCol => _userDoc.collection('inventory');
+  CollectionReference get _ledgerCol => _userDoc.collection('ledger');
+  CollectionReference get _setsCol => _userDoc.collection('sets');
+  CollectionReference get _wishlistCol => _userDoc.collection('wishlist');
+  CollectionReference get _bundlesCol => _userDoc.collection('bundles');
+  CollectionReference get _ticketsCol => _userDoc.collection('tickets');
+  CollectionReference get _customersCol => _userDoc.collection('customers');
+  CollectionReference get _locationsCol => _userDoc.collection('locations');
+  CollectionReference get _forecastsCol => _userDoc.collection('forecasts');
+  CollectionReference get _mileageCol => _userDoc.collection('mileage');
 
-  CollectionReference<Map<String, dynamic>> get _inventoryRef {
-    if (_uid == null) throw Exception('User not authenticated');
-    return _db.collection('users').doc(_uid!).collection('inventory');
-  }
-
-  CollectionReference<Map<String, dynamic>> get _ledgerRef {
-    if (_uid == null) throw Exception('User not authenticated');
-    return _db.collection('users').doc(_uid!).collection('ledger');
-  }
-
-  CollectionReference<Map<String, dynamic>> get _setsRef {
-    if (_uid == null) throw Exception('User not authenticated');
-    return _db.collection('users').doc(_uid!).collection('sets');
-  }
-
-  CollectionReference<Map<String, dynamic>> get _wishlistRef {
-    if (_uid == null) throw Exception('User not authenticated');
-    return _db.collection('users').doc(_uid!).collection('wishlist');
-  }
-
-  CollectionReference<Map<String, dynamic>> get _bundlesRef {
-    if (_uid == null) throw Exception('User not authenticated');
-    return _db.collection('users').doc(_uid!).collection('bundles');
-  }
-
-  CollectionReference<Map<String, dynamic>> get _ticketsRef {
-    return _db.collection('Tickets');
-  }
-
-  // --- USER PROFILE ---
+  // --- User Profile & Stats ---
 
   Future<Map<String, dynamic>> getUserData() async {
-    if (_uid == null) return {'tier': 'Hobbyist', 'scans_this_month': 0, 'listings_created': 0};
-    final doc = await _db.collection('users').doc(_uid!).get();
-    return doc.data() ?? {'tier': 'Hobbyist', 'scans_this_month': 0, 'listings_created': 0};
+    final doc = await _userDoc.get();
+    return doc.data() as Map<String, dynamic>? ?? {};
   }
 
-  // --- INVENTORY (OMNIVISION / VISIONHUB / LIBRARY) ---
+  // --- Inventory (Books) ---
 
   Future<void> saveBook(BookModel book) async {
-    // Normalization: ISBN to uppercase (for 'X'), title to lowercase for search
-    final normalizedBook = book.copyWith(
-      isbn: book.isbn.toUpperCase().trim(),
-      titleLowercase: book.title.toLowerCase().trim(),
-    );
-    
-    final docRef = _inventoryRef.doc(normalizedBook.id ?? normalizedBook.isbn);
-    await docRef.set(normalizedBook.toJson(), SetOptions(merge: true));
+    final docId = book.id ?? _inventoryCol.doc().id;
+    await _inventoryCol
+        .doc(docId)
+        .set(book.copyWith(id: docId).toJson(), SetOptions(merge: true));
   }
 
   Stream<List<BookModel>> getInventoryStream() {
-    return _inventoryRef.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => BookModel.fromJson(doc.data())).toList();
-    });
+    return _inventoryCol
+        .orderBy('dateSourced', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => BookModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 
   Future<List<BookModel>> getInventoryOnce() async {
-    final snapshot = await _inventoryRef.get();
-    return snapshot.docs.map((doc) => BookModel.fromJson(doc.data())).toList();
+    final snapshot = await _inventoryCol.get();
+    return snapshot.docs
+        .map((doc) => BookModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
-  // --- LEDGER (TAXVISION) ---
+  // --- Ledger (Expenses/TaxVision) ---
 
   Future<void> saveExpense(ExpenseModel expense) async {
-    // Normalization: Category to Title Case for consistency in UI, but handle search as-is
-    final normalizedExpense = expense.copyWith(
-      category: expense.category.trim().toUpperCase(), // Store as 'COGS', 'SUPPLIES'
-    );
-    
-    final docRef = _ledgerRef.doc();
-    await docRef.set(normalizedExpense.toJson());
+    final docId = expense.id ?? _ledgerCol.doc().id;
+    await _ledgerCol
+        .doc(docId)
+        .set(expense.copyWith(id: docId).toJson(), SetOptions(merge: true));
   }
 
   Stream<List<ExpenseModel>> getLedgerStream() {
-    return _ledgerRef.orderBy('date', descending: true).snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => ExpenseModel.fromJson(doc.data()..['id'] = doc.id)).toList();
-    });
+    return _ledgerCol
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) =>
+                    ExpenseModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 
-  // --- SETS (SETVISION) ---
+  // --- Sets & Series ---
 
   Future<void> saveSeries(SeriesModel series) async {
-    final docRef = _setsRef.doc(series.id);
-    await docRef.set(series.toJson(), SetOptions(merge: true));
+    final docId = series.id ?? _setsCol.doc().id;
+    await _setsCol.doc(docId).set(series.toJson());
   }
 
   Stream<List<SeriesModel>> getSetsStream() {
-    return _setsRef.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => SeriesModel.fromJson(doc.data()..['id'] = doc.id)).toList();
-    });
+    return _setsCol.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map(
+            (doc) => SeriesModel.fromJson(doc.data() as Map<String, dynamic>),
+          )
+          .toList(),
+    );
   }
 
-  // --- WISHLIST (WISHVISION) ---
+  // --- Wishlist ---
 
   Future<void> saveWish(WishModel wish) async {
-    final docRef = _wishlistRef.doc(wish.isbn);
-    await docRef.set(wish.toJson(), SetOptions(merge: true));
+    final docId = wish.id ?? _wishlistCol.doc().id;
+    await _wishlistCol.doc(docId).set(wish.toJson());
   }
 
   Stream<List<WishModel>> getWishlistStream() {
-    return _wishlistRef.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => WishModel.fromJson(doc.data()..['id'] = doc.id)).toList();
-    });
+    return _wishlistCol.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map((doc) => WishModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
-  // --- BUNDLES (BUNDLEVISION) ---
+  // --- Bundles ---
 
   Future<void> saveBundle(BundleModel bundle) async {
-    final docRef = _bundlesRef.doc();
-    await docRef.set(bundle.toJson());
+    final docId = bundle.id ?? _bundlesCol.doc().id;
+    await _bundlesCol.doc(docId).set(bundle.toJson());
   }
 
   Stream<List<BundleModel>> getBundlesStream() {
-    return _bundlesRef.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => BundleModel.fromJson(doc.data()..['id'] = doc.id)).toList();
-    });
+    return _bundlesCol.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map(
+            (doc) => BundleModel.fromJson(doc.data() as Map<String, dynamic>),
+          )
+          .toList(),
+    );
   }
 
-  // --- TICKETS (SUPPORTVISION) ---
+  // --- Support Tickets ---
 
   Future<void> createTicket(SupportTicket ticket) async {
-    final docRef = _ticketsRef.doc();
-    await docRef.set(ticket.toJson()..['user_id'] = _uid);
+    final docId = _ticketsCol.doc().id;
+    await _ticketsCol.doc(docId).set(ticket.copyWith(id: docId).toJson());
   }
 
   Stream<List<SupportTicket>> getMyTicketsStream() {
-    if (_uid == null) return Stream.value([]);
-    return _ticketsRef
-      .where('user_id', isEqualTo: _uid)
-      .orderBy('updated_at', descending: true)
-      .snapshots().map((snapshot) {
-        return snapshot.docs.map((doc) => SupportTicket.fromJson(doc.data()..['id'] = doc.id)).toList();
-      });
+    return _ticketsCol
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) =>
+                    SupportTicket.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
+  }
+
+  // --- CRM ---
+
+  Future<void> saveCustomer(CustomerModel customer) async {
+    final docId = customer.id ?? _customersCol.doc().id;
+    await _customersCol.doc(docId).set(customer.copyWith(id: docId).toJson());
+  }
+
+  Stream<List<CustomerModel>> getCustomersStream() {
+    return _customersCol.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) =>
+                    CustomerModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
+  }
+
+  // --- Locate ---
+
+  Future<void> saveLocation(LocationModel location) async {
+    final docId = location.id ?? _locationsCol.doc().id;
+    await _locationsCol.doc(docId).set(location.copyWith(id: docId).toJson());
+  }
+
+  Stream<List<LocationModel>> getLocationsStream() {
+    return _locationsCol.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) =>
+                    LocationModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
+  }
+
+  // --- Forecast ---
+
+  Future<void> saveForecast(ForecastModel forecast) async {
+    final docId = forecast.id ?? _forecastsCol.doc().id;
+    await _forecastsCol.doc(docId).set(forecast.copyWith(id: docId).toJson());
+  }
+
+  Stream<List<ForecastModel>> getForecastsStream() {
+    return _forecastsCol.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) =>
+                    ForecastModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
+  }
+
+  // --- Mileage ---
+
+  Future<void> saveMileage(MileageModel mileage) async {
+    final docId = mileage.id ?? _mileageCol.doc().id;
+    await _mileageCol.doc(docId).set(mileage.copyWith(id: docId).toJson());
+  }
+
+  Stream<List<MileageModel>> getMileageStream() {
+    return _mileageCol.orderBy('date', descending: true).snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) =>
+                    MileageModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 }

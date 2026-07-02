@@ -16,8 +16,8 @@ class _SettingsVisionScreenState extends State<SettingsVisionScreen> {
   // Mock Settings State
   double _minProfit = 15.0;
   int _maxSalesRank = 500000;
-  bool _ebayConnected = true;
-  bool _amazonConnected = false;
+  final bool _ebayConnected = true;
+  final bool _amazonConnected = false;
   bool _isVoiceEnabled = true;
 
   void _openPaywall() => context.push('/paywall');
@@ -209,7 +209,7 @@ class _SettingsVisionScreenState extends State<SettingsVisionScreen> {
             subtitle: const Text('Hands-free buy/skip announcements'),
             value: _isVoiceEnabled, 
             onChanged: (v) => setState(() => _isVoiceEnabled = v),
-            activeColor: AppColors.primary,
+            activeThumbColor: AppColors.primary,
           ),
           const Divider(height: 1),
           ListTile(

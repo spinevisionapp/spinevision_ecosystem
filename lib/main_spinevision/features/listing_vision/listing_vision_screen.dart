@@ -7,9 +7,8 @@ import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 import 'package:go_router/go_router.dart';
 
 class ListingVisionScreen extends StatefulWidget {
-  final BookModel? initialBook;
-
   const ListingVisionScreen({super.key, this.initialBook});
+  final BookModel? initialBook;
 
   @override
   State<ListingVisionScreen> createState() => _ListingVisionScreenState();
@@ -79,7 +78,7 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
     );
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        context.go('/vision_hub');
+        context.go('/');
       }
     });
   }
@@ -102,11 +101,11 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
           GatedFeature(
             currentTier: tier,
             requiredTier: 'Enterprise',
-            featureName: 'FBA Box Builder',
+            featureName: 'Amazon Command',
             child: IconButton(
-              onPressed: () => context.push('/fba_box_builder'),
-              icon: const Icon(Icons.inventory_2),
-              tooltip: 'FBA Logistics',
+              onPressed: () => context.push('/amazon'),
+              icon: const Icon(Icons.rocket_launch),
+              tooltip: 'AmazonVision Dashboard',
             ),
           ),
         ],
@@ -140,9 +139,9 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
           Text('Select an item from your hub to list', style: AppTextStyles.bodyLarge.copyWith(color: AppColors.secondaryText)),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed: () => context.go('/vision_hub'), 
+            onPressed: () => context.pop(), 
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
-            child: const Text('GO TO HUB'),
+            child: const Text('GO BACK'),
           ),
         ],
       ),
@@ -173,16 +172,77 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
     );
   }
 
+  Widget _buildItemCard() {
+    final repository = RepositoryProvider.of<BookRepository>(context);
+    final isEnterprise = repository.currentTier == 'Enterprise';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white, 
+        borderRadius: BorderRadius.circular(12), 
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)]
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _selectedBook!.coverImageUrl != null
+                ? Image.network(_selectedBook!.coverImageUrl!, width: 60, height: 80, fit: BoxFit.cover)
+                : Container(width: 60, height: 80, color: AppColors.secondaryBackground, child: const Icon(Icons.book, color: Colors.grey)),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(child: Text(_selectedBook!.title, style: AppTextStyles.titleMedium, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                        if (isEnterprise)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                            child: const Text('AMZ: UNGATED', style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: AppColors.success)),
+                          ),
+                      ],
+                    ),
+                    Text(_selectedBook!.author, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (isEnterprise)
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Amazon restricted categories check: CLEAR.')));
+                },
+                icon: const Icon(Icons.verified_user_outlined, size: 14),
+                label: const Text('CHECK RESTRICTIONS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 32),
+                  side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
+                  foregroundColor: AppColors.primary,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildModeToggle() {
     return Container(
       decoration: BoxDecoration(color: AppColors.secondaryBackground, borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
           Expanded(
-            child: _toggleButton("Multi-Platform", !_isFBAMode, () => setState(() => _isFBAMode = false)),
+            child: _toggleButton('Multi-Platform', !_isFBAMode, () => setState(() => _isFBAMode = false)),
           ),
           Expanded(
-            child: _toggleButton("Amazon FBA", _isFBAMode, () => setState(() => _isFBAMode = true)),
+            child: _toggleButton('Amazon FBA', _isFBAMode, () => setState(() => _isFBAMode = true)),
           ),
         ],
       ),
@@ -209,7 +269,7 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Select Target Channels', style: AppTextStyles.titleMedium),
+        const Text('Select Target Channels', style: AppTextStyles.titleMedium),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
@@ -236,10 +296,10 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
         borderRadius: BorderRadius.circular(12), 
         border: Border.all(color: AppColors.warning)
       ),
-      child: Row(
+      child: const Row(
         children: [
-          const Icon(Icons.bolt, color: AppColors.warning),
-          const SizedBox(width: 12),
+          Icon(Icons.bolt, color: AppColors.warning),
+          SizedBox(width: 12),
           Expanded(child: Text('Amazon FBA Mode will handle inbound logistics and prime-eligible pricing.', style: AppTextStyles.bodyMedium)),
         ],
       ),
@@ -279,34 +339,6 @@ class _ListingVisionScreenState extends State<ListingVisionScreen> {
       );
     }
     return _buildAIResultPreview();
-  }
-
-  Widget _buildItemCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white, 
-        borderRadius: BorderRadius.circular(12), 
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)]
-      ),
-      child: Row(
-        children: [
-          _selectedBook!.coverImageUrl != null
-            ? Image.network(_selectedBook!.coverImageUrl!, width: 60, height: 80, fit: BoxFit.cover)
-            : Container(width: 60, height: 80, color: AppColors.secondaryBackground, child: const Icon(Icons.book, color: Colors.grey)),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_selectedBook!.title, style: AppTextStyles.titleMedium),
-                Text(_selectedBook!.author, style: AppTextStyles.bodyMedium),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildAIResultPreview() {

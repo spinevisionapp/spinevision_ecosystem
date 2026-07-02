@@ -7,8 +7,7 @@ SpineVision is a multi-module, professional-grade book reselling platform. It le
 ---
 
 ## 2. Technical Architecture
-*   **Frontend**: Flutter (Mobile) with Bloc for state management and GoRouter for navigation.
-*   **Backend**: Python Flask Orchestrator integrated with Google Generative AI (Gemini).
+*   **Frontend**: Flutter (Mobile, Desktop, Tablet) with Bloc for state management and GoRouter for navigation.
 *   **Database**: Google Cloud Firestore (NoSQL) with real-time streaming.
 *   **Storage**: Google Cloud Storage (GCS) for high-fidelity book spine and receipt imagery.
 *   **Authentication**: Firebase Auth with JWT-based API Gateway security.
@@ -36,7 +35,7 @@ SpineVision is a multi-module, professional-grade book reselling platform. It le
 
 ### **Enterprise Operations**
 *   **LogisticsVision (Box Builder)**: An AI-optimized FBA shipment tool. Gemini selects items from inventory to hit the **40-45 lbs UPS "Sweet Spot"** exactly, maximizing shipping efficiency.
-*   **TaxVision (Financial Ledger)**: AI receipt scanning and auto-categorization of COGS (Cost of Goods Sold) and business expenses.
+*   **TaxVision (Financial Ledger)**: AI-powered itemized receipt scanning. Automatically extracts line-item details (unit price, item description) alongside totals to categorize COGS and business expenses.
 
 ### **Intelligence & Growth**
 *   **SupportVision (AI Strategist)**: A direct chat line to the Gemini AI Orchestrator for high-level reselling strategy, market trend analysis, and technical help.
@@ -70,7 +69,7 @@ SpineVision is a multi-module, professional-grade book reselling platform. It le
 | `/box_optimizer` | FBA Box Weight Optimization | LogisticsVision |
 | `/bundle_optimizer` | Collection Strategy Generation | BundleVision |
 | `/reprice_vision` | Market Watch & Price Delta Scan | RepriceVision |
-| `/extract_receipt` | OCR financial extraction | TaxVision |
+| `/extract_receipt` | Itemized OCR financial extraction | TaxVision |
 | `/chatbot` | Reseller Strategy Assistant | SupportVision |
 | `/marketing_automation` | Social Media Content Engine | MarketingVision |
 

@@ -210,7 +210,7 @@ class _ProfitVisionScreenState extends State<ProfitVisionScreen> {
   }
 
   Widget _buildMainProfitCard(BookRepository repo, String tier) {
-    bool isHobbyist = tier == 'Hobbyist';
+    final bool isHobbyist = tier == 'Hobbyist';
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),

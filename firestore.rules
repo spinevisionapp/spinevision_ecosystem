@@ -18,7 +18,11 @@ service cloud.firestore {
     // Users & User-Specific Data
     match /users/{userId} {
       // Profile data: Tier, subscription status, scan counts
-      allow read, write: if isAuthenticated() && isOwner(userId);
+      allow read: if isAuthenticated() && isOwner(userId);
+      // Prevent users from modifying their own tier, usage metrics, or promotion status
+      allow write: if isAuthenticated() && isOwner(userId) 
+                   && !request.resource.data.diff(resource.data).affectedKeys()
+                      .hasAny(['tier', 'promo_tier', 'promo_expires', 'scans_this_month', 'listings_created']);
 
       // Inventory Module: All sourced books
       match /inventory/{bookId} {
@@ -32,6 +36,27 @@ service cloud.firestore {
 
       // SetVision: Series and set progress
       match /sets/{setId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+
+      // VisionCRM: Customer profiles
+      match /customers/{customerId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+
+      // VisionLocate: Inventory mapping
+      match /locations/{locationId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+
+      // ForecastVision: AI Projections
+      match /forecasts/{forecastId} {
+        allow read: if isAuthenticated() && isOwner(userId);
+        allow write: if false; // Only written by backend
+      }
+
+      // TaxVision: Mileage logs
+      match /mileage/{mileageId} {
         allow read, write: if isAuthenticated() && isOwner(userId);
       }
     }
@@ -53,6 +78,18 @@ service cloud.firestore {
     match /MetadataCache/{cacheId} {
       allow read: if isAuthenticated();
       allow write: if false; // Only written via Admin SDK in backend
+    }
+
+    // Market_Data: Global market trends and price lookups
+    match /Market_Data/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // Orders: Sales history and profit data
+    match /Orders/{orderId} {
+      allow read: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      allow write: if false; // Managed by backend processors
     }
 
     // Default Deny

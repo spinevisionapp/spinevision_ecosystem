@@ -77,7 +77,7 @@ class _SetVisionScreenState extends State<SetVisionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Active Series Tracking', style: AppTextStyles.headlineMedium),
+        const Text('Active Series Tracking', style: AppTextStyles.headlineMedium),
         const SizedBox(height: 8),
         Text('Complete your sets to unlock 1.5x - 3x ROI bonuses.', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.secondaryText)),
       ],
@@ -98,7 +98,7 @@ class _SetVisionScreenState extends State<SetVisionScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: ExpansionTile(
             title: Text(set['name'], style: AppTextStyles.titleLarge),
-            subtitle: Text('Bonus Multiplier: ${set['bonus']}x', style: TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold, fontSize: 12)),
+            subtitle: Text('Bonus Multiplier: ${set['bonus']}x', style: const TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold, fontSize: 12)),
             leading: Stack(
               alignment: Alignment.center,
               children: [
@@ -151,18 +151,18 @@ class _SetVisionScreenState extends State<SetVisionScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.secondary.withValues(alpha: 0.2)),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.notifications_active, color: AppColors.secondary),
-              const SizedBox(width: 12),
+              Icon(Icons.notifications_active, color: AppColors.secondary),
+              SizedBox(width: 12),
               Text('Smart AR Sourcing', style: AppTextStyles.titleMedium),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             'OmniVision will now highlight these missing volumes in spatial mode with a gold glow.',
             style: TextStyle(fontSize: 14, height: 1.4),
           ),

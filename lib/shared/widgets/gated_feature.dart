@@ -4,10 +4,6 @@ import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 import 'package:go_router/go_router.dart';
 
 class GatedFeature extends StatelessWidget {
-  final String currentTier;
-  final String requiredTier;
-  final Widget child;
-  final String? featureName;
 
   const GatedFeature({
     super.key,
@@ -16,6 +12,10 @@ class GatedFeature extends StatelessWidget {
     required this.child,
     this.featureName,
   });
+  final String currentTier;
+  final String requiredTier;
+  final Widget child;
+  final String? featureName;
 
   @override
   Widget build(BuildContext context) {

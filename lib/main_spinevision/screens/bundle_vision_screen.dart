@@ -99,7 +99,7 @@ class _BundleVisionScreenState extends State<BundleVisionScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Bundle Maximizer', style: AppTextStyles.headlineMedium),
+          const Text('Bundle Maximizer', style: AppTextStyles.headlineMedium),
           const SizedBox(height: 4),
           Text('Combine items to increase AOV and clear slow inventory.', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
         ],
@@ -176,7 +176,7 @@ class _BundleVisionScreenState extends State<BundleVisionScreen> {
   Widget _buildActionPanel() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -2))]),
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -2))]),
       child: Row(
         children: [
           if (_selectedBooks.isNotEmpty)
@@ -224,7 +224,7 @@ class _BundleVisionScreenState extends State<BundleVisionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Inventory Hub', style: AppTextStyles.headlineMedium),
+              const Text('Inventory Hub', style: AppTextStyles.headlineMedium),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(

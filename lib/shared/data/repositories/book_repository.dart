@@ -4,11 +4,11 @@ import 'package:spinevision_ecosystem/shared/services/api_service.dart';
 import 'package:spinevision_ecosystem/shared/services/firestore_service.dart';
 
 class BookRepository {
+
+  BookRepository(this._apiService, this._firestoreService);
   final ApiService _apiService;
   final FirestoreService _firestoreService;
   String _currentTier = 'Hobbyist';
-
-  BookRepository(this._apiService, this._firestoreService);
 
   String get currentTier => _currentTier;
 
@@ -16,7 +16,7 @@ class BookRepository {
 
   Future<void> syncSubscriptionStatus() async {
     try {
-      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+      final CustomerInfo customerInfo = await Purchases.getCustomerInfo();
       _updateTierFromCustomerInfo(customerInfo);
     } catch (e) {}
   }

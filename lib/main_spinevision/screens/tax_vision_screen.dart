@@ -16,7 +16,7 @@ class TaxVisionScreen extends StatefulWidget {
 class _TaxVisionScreenState extends State<TaxVisionScreen> {
   bool _isProcessing = false;
   double _ytdCogs = 4250.00;
-  double _taxLiability = 637.50;
+  final double _taxLiability = 637.50;
   
   final List<Map<String, dynamic>> _recentExpenses = [
     {'merchant': 'Goodwill', 'date': 'Oct 24', 'amount': 45.20, 'category': 'COGS'},
@@ -76,6 +76,8 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFinancialSummary(),
+            const SizedBox(height: 32),
+            _buildMileageSection(),
             const SizedBox(height: 32),
             _buildSectionHeader('Recent Expenses'),
             _buildExpenseList(),
@@ -138,6 +140,53 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(title, style: AppTextStyles.titleLarge),
+    );
+  }
+
+  Widget _buildMileageSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.secondary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('AUTO-MILEAGE', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
+              ElevatedButton(
+                onPressed: () {}, 
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.secondary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0), minimumSize: const Size(0, 32)),
+                child: const Text('LOG TRIP', style: TextStyle(fontSize: 10)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('1,240', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text('TOTAL MILES', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                ],
+              ),
+              SizedBox(width: 40),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('\$830.80', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green)),
+                  Text('DEDUCTION', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

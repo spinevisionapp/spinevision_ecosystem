@@ -5,14 +5,14 @@ import 'package:spinevision_ecosystem/shared/data/repositories/book_repository.d
 import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 
 class ReviewVisionScreen extends StatefulWidget {
-  final List<BookModel> scannedBooks;
-  final String batchName;
 
   const ReviewVisionScreen({
     super.key,
     required this.scannedBooks,
     this.batchName = 'New Batch Scan',
   });
+  final List<BookModel> scannedBooks;
+  final String batchName;
 
   @override
   State<ReviewVisionScreen> createState() => _ReviewVisionScreenState();
@@ -186,13 +186,13 @@ class _ReviewVisionScreenState extends State<ReviewVisionScreen> {
                           ],
                         ),
                         if (isSelected)
-                          Positioned(
+                          const Positioned(
                             top: 8,
                             right: 8,
                             child: CircleAvatar(
                               radius: 12,
                               backgroundColor: AppColors.primaryPurple,
-                              child: const Icon(Icons.check, size: 16, color: Colors.white),
+                              child: Icon(Icons.check, size: 16, color: Colors.white),
                             ),
                           ),
                       ],

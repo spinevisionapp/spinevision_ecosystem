@@ -1,124 +1,112 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:spinevision_ecosystem/shared/services/auth_service.dart';
 
+/// Service responsible for communicating with the SpineVision AI Orchestrator.
 class ApiService {
-  final String baseUrl;
-  final http.Client _client;
-  final AuthService _authService;
 
   ApiService({
-    required AuthService authService,
-    this.baseUrl = 'http://localhost:8080',
-    http.Client? client,
-  })  : _authService = authService,
-        _client = client ?? http.Client();
+    this.baseUrl = 'http://localhost:5000',
+    this.authToken,
+  });
+  final String baseUrl;
+  final String? authToken;
 
-  Future<Map<String, String>> _getHeaders() async {
-    final token = await _authService.getIdToken();
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
+  Map<String, String> get _headers => {
+    'Content-Type': 'application/json',
+    if (authToken != null) 'Authorization': 'Bearer $authToken',
+  };
+
+  /// Generic POST handler used by the repository.
+  Future<Map<String, dynamic>> post(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$path'),
+      headers: _headers,
+      body: jsonEncode(body),
+    );
+    return _handleResponse(response);
   }
 
-  Future<Map<String, dynamic>> post(String path, Map<String, dynamic> data) async {
-    final response = await _client.post(
-      Uri.parse('$baseUrl$path'),
-      headers: await _getHeaders(),
-      body: jsonEncode(data),
-    );
+  Future<Map<String, dynamic>> getAnalyticsEnrichment(
+    Map<String, dynamic> body,
+  ) => post('/analytics_enrichment', body);
 
+  Future<Map<String, dynamic>> getBuyDecision(
+    Map<String, dynamic> body,
+    Map<String, dynamic> settings,
+  ) => post('/buy_decision', {...body, 'settings': settings});
+
+  Future<Map<String, dynamic>> batchProcessShelf(String uri) =>
+      post('/batch_process_shelf', {'image_url': uri});
+
+  Future<Map<String, dynamic>> extractReceipt(String uri) =>
+      post('/extract_receipt', {'image_url': uri});
+
+  Future<Map<String, dynamic>> optimizeBox(
+    List<Map<String, dynamic>> inventory,
+    double weight,
+  ) => post('/optimize_box', {'inventory': inventory, 'weight': weight});
+
+  Future<Map<String, dynamic>> repriceInventory(
+    List<Map<String, dynamic>> inventory,
+  ) => post('/extract_pricing', {'inventory': inventory});
+
+  Future<Map<String, dynamic>> generateListing(
+    Map<String, dynamic> bookJson,
+    String platform,
+  ) => post('/generate_listing', {'book': bookJson, 'platform': platform});
+
+  Future<Map<String, dynamic>> analyzeSet(Map<String, dynamic> bookJson) =>
+      post('/analyze_set', {'book': bookJson});
+
+  Future<Map<String, dynamic>> getSocialPosts() =>
+      post('/generate_social_content', {});
+
+  Future<Map<String, dynamic>> analyzeSignature(String uri) =>
+      post('/analyze_condition', {'image_url': uri, 'focus': 'signature'});
+
+  // --- CRM ---
+  Future<Map<String, dynamic>> getCustomers() => post('/crm/customers', {});
+  Future<Map<String, dynamic>> saveCustomer(Map<String, dynamic> data) =>
+      post('/crm/customers', data);
+  Future<Map<String, dynamic>> getCrmAnalytics() => post('/crm/analytics', {});
+
+  // --- Locate ---
+  Future<Map<String, dynamic>> getLocations() => post('/locate/map', {});
+  Future<Map<String, dynamic>> saveLocation(Map<String, dynamic> data) =>
+      post('/locate/map', data);
+  Future<Map<String, dynamic>> getPickList() => post('/locate/pick_list', {});
+
+  // --- TaxVision ---
+  Future<Map<String, dynamic>> calculateMileage(double miles) =>
+      post('/tax/calculate_mileage', {'miles': miles});
+  Future<Map<String, dynamic>> generateTaxReport() => post('/tax/generate_report', {});
+
+  Future<Map<String, dynamic>> askChatbot(String question) =>
+      post('/chatbot', {'question': question});
+
+  Map<String, dynamic> _handleResponse(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
+      try {
+        final decoded = jsonDecode(response.body);
+        // Wrap in a 'data' key to match BookRepository expectations if necessary
+        return {'data': decoded};
+      } catch (e) {
+        throw Exception('Failed to parse API response: $e');
+      }
     } else {
-      throw Exception('API Request failed with status: ${response.statusCode}\nBody: ${response.body}');
+      final errorBody = response.body;
+      throw Exception('API Error (${response.statusCode}): $errorBody');
     }
   }
 
-  Future<Map<String, dynamic>> get(String path) async {
-    final response = await _client.get(
-      Uri.parse('$baseUrl$path'),
-      headers: await _getHeaders(),
+  Future<Map<String, dynamic>> getHealth() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/health'),
+      headers: _headers,
     );
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('API Request failed with status: ${response.statusCode}\nBody: ${response.body}');
-    }
-  }
-
-  // Domain-specific methods
-  
-  Future<Map<String, dynamic>> extractMetadata(String imageReference) async {
-    return post('/extract_metadata', {'image_reference': imageReference});
-  }
-
-  Future<Map<String, dynamic>> extractPricing(String imageReference, {Map<String, dynamic>? bookData}) async {
-    return post('/extract_pricing', {
-      'image_reference': imageReference,
-      'book_data': ?bookData,
-    });
-  }
-
-  Future<Map<String, dynamic>> analyzeCondition(String imageReference) async {
-    return post('/analyze_condition', {'image_reference': imageReference});
-  }
-
-  Future<Map<String, dynamic>> batchProcessShelf(String imageReference) async {
-    return post('/batch_process_shelf', {'image_reference': imageReference});
-  }
-
-  Future<Map<String, dynamic>> generateListing(Map<String, dynamic> bookData, String platform) async {
-    return post('/generate_listing', {
-      'book_data': bookData,
-      'platform': platform,
-    });
-  }
-
-  Future<Map<String, dynamic>> getBuyDecision(Map<String, dynamic> bookData, Map<String, dynamic> userSettings) async {
-    return post('/buy_decision', {
-      'book_data': bookData,
-      'user_settings': userSettings,
-    });
-  }
-
-  Future<Map<String, dynamic>> getAnalyticsEnrichment(Map<String, dynamic> rawData) async {
-    return post('/analytics_enrichment', {'raw_data': rawData});
-  }
-
-  Future<Map<String, dynamic>> optimizeBundle(List<Map<String, dynamic>> books) async {
-    return post('/bundle_optimizer', {'books': books});
-  }
-
-  Future<Map<String, dynamic>> extractReceipt(String imageReference) async {
-    return post('/extract_receipt', {'image_reference': imageReference});
-  }
-
-  Future<Map<String, dynamic>> askChatbot(String question) async {
-    return post('/chatbot', {'question': question});
-  }
-
-  Future<Map<String, dynamic>> analyzeSet(Map<String, dynamic> metadata) async {
-    return post('/analyze_set', {'metadata': metadata});
-  }
-
-  Future<Map<String, dynamic>> getSocialPosts() async {
-    // In a real app, this would hit the backend's marketing_automation logic
-    return post('/marketing_automation', {}); 
-  }
-
-  Future<Map<String, dynamic>> optimizeBox(List<Map<String, dynamic>> inventory, double currentWeight) async {
-    return post('/box_optimizer', {'inventory': inventory, 'current_weight': currentWeight});
-  }
-
-  Future<Map<String, dynamic>> repriceInventory(List<Map<String, dynamic>> inventory) async {
-    return post('/reprice_vision', {'inventory': inventory});
-  }
-
-  Future<Map<String, dynamic>> analyzeSignature(String imageReference) async {
-    return post('/analyze_signature', {'image_reference': imageReference});
+    return jsonDecode(response.body);
   }
 }

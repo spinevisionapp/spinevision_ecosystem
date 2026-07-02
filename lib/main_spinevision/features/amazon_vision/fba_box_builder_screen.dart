@@ -78,8 +78,8 @@ class _FBABoxBuilderScreenState extends State<FBABoxBuilderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isOverWeight = _currentWeight > _maxWeight;
-    bool isOptimal = _currentWeight >= 40.0 && _currentWeight <= 45.0;
+    final bool isOverWeight = _currentWeight > _maxWeight;
+    final bool isOptimal = _currentWeight >= 40.0 && _currentWeight <= 45.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -110,7 +110,7 @@ class _FBABoxBuilderScreenState extends State<FBABoxBuilderScreen> {
   }
 
   Widget _buildWeightDashboard(bool isOver, bool isOptimal) {
-    Color statusColor = isOver ? AppColors.error : isOptimal ? AppColors.secondary : AppColors.primary;
+    final Color statusColor = isOver ? AppColors.error : isOptimal ? AppColors.secondary : AppColors.primary;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -218,7 +218,7 @@ class _FBABoxBuilderScreenState extends State<FBABoxBuilderScreen> {
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-               Text('Inventory Hub', style: AppTextStyles.headlineMedium),
+               const Text('Inventory Hub', style: AppTextStyles.headlineMedium),
                const SizedBox(height: 16),
                Expanded(
                  child: ListView.builder(
@@ -268,9 +268,9 @@ class _FBABoxBuilderScreenState extends State<FBABoxBuilderScreen> {
   Widget _buildActionPanel(bool isOptimal) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -2))],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -2))],
       ),
       child: Row(
         children: [

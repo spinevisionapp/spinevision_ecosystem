@@ -4,9 +4,9 @@ import 'package:spinevision_ecosystem/shared/data/models/book_model.dart';
 import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 
 class BookListItem extends StatelessWidget {
-  final BookModel book;
 
   const BookListItem({super.key, required this.book});
+  final BookModel book;
 
   @override
   Widget build(BuildContext context) {

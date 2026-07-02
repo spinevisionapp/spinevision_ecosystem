@@ -3,6 +3,7 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="google._upb._message")
 
 import google.generativeai as genai
+from support_vision import FAQS
 
 # This is a real Gemini API call.
 def ask_gemini_chatbot(question, user_id=None, db=None):
@@ -26,7 +27,18 @@ def ask_gemini_chatbot(question, user_id=None, db=None):
             except Exception as e:
                 return {"error": f"Error fetching user data: {str(e)}"}
 
-        tools = [get_user_stats]
+        def search_faqs(query: str):
+            """
+            Searches the SpineVision FAQ database for relevant information.
+            """
+            query = query.lower()
+            results = []
+            for faq in FAQS:
+                if query in faq['question'].lower() or query in faq['answer'].lower():
+                    results.append(faq)
+            return results if results else "No specific FAQ found for this query."
+
+        tools = [get_user_stats, search_faqs]
         
         model = genai.GenerativeModel(
             'gemini-2.0-flash',

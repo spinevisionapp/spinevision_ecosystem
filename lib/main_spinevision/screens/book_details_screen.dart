@@ -3,9 +3,9 @@ import 'package:spinevision_ecosystem/shared/data/models/book_model.dart';
 import 'package:spinevision_ecosystem/shared/theme/colors.dart';
 
 class BookDetailsScreen extends StatelessWidget {
-  final BookModel book;
 
   const BookDetailsScreen({super.key, required this.book});
+  final BookModel book;
 
   @override
   Widget build(BuildContext context) {
@@ -178,10 +178,10 @@ class BookDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (book.isSigned) ...[
-             Row(
+             const Row(
                children: [
-                 const Icon(Icons.verified, color: AppColors.secondary, size: 20),
-                 const SizedBox(width: 10),
+                 Icon(Icons.verified, color: AppColors.secondary, size: 20),
+                 SizedBox(width: 10),
                  Text('SIGNATURE AUTHENTICATED', style: TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1)),
                ],
              ),

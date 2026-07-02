@@ -62,7 +62,7 @@ class _WishVisionScreenState extends State<WishVisionScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Add "Golden Snitch" Target', style: AppTextStyles.titleMedium),
+          const Text('Add "Golden Snitch" Target', style: AppTextStyles.titleMedium),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -129,7 +129,7 @@ class _WishVisionScreenState extends State<WishVisionScreen> {
                 trailing: Switch(
                   value: wish.isActive, 
                   onChanged: (v) => repository.saveWish(wish.copyWith(isActive: v)),
-                  activeColor: AppColors.secondary,
+                  activeThumbColor: AppColors.secondary,
                 ),
               ),
             );

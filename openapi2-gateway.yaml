@@ -21,6 +21,8 @@ x-google-backend:
   # The address of the backend service (your Cloud Run orchestrator).
   address: 'https://spinevision-orchestrator-YOUR_REGION-PROJECT_HASH.a.run.app'
   # Enable CORS to allow requests from the FlutterFlow web app.
+  # Set a longer deadline for AI-heavy operations to prevent timeouts.
+  deadline: 120.0
   # The `allow_cors` option automatically handles preflight (OPTIONS) requests.
   allow_cors: true
 

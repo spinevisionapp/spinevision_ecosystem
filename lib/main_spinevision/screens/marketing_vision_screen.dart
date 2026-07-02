@@ -84,7 +84,7 @@ class _MarketingVisionScreenState extends State<MarketingVisionScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Social Content Planner', style: AppTextStyles.headlineMedium),
+        const Text('Social Content Planner', style: AppTextStyles.headlineMedium),
         const SizedBox(height: 8),
         Text('AI-generated posts tailored to your recent high-ROI finds.', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.secondaryText)),
       ],

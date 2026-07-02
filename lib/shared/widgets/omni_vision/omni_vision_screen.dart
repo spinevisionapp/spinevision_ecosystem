@@ -31,7 +31,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   bool _isVoiceEnabled = false;
   
   // Filtering State (Spatial)
-  bool _highProfitOnly = false;
+  final bool _highProfitOnly = false;
   
   // Device & Camera State
   bool _isTorchOn = false;
@@ -88,7 +88,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   }
 
   Future<void> _loadUserStats() async {
-    final repository = RepositoryProvider.of<BookRepository>(context);
+    final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
     final stats = await repository.getUserStats();
     if (mounted) {
       setState(() {
@@ -98,14 +98,14 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   }
 
   Future<void> _loadWishlist() async {
-    final repository = RepositoryProvider.of<BookRepository>(context);
+    final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
     repository.getWishlistStream().listen((wishes) {
       if (mounted) setState(() => _activeWishlist = wishes.where((w) => w.isActive).toList());
     });
   }
 
   Future<void> _initializeTTS() async {
-    await _tts.setLanguage("en-US");
+    await _tts.setLanguage('en-US');
     await _tts.setSpeechRate(0.5);
   }
 
@@ -138,7 +138,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
 
   void _switchMode(OmniVisionMode mode) {
     if (mode == _currentMode) return;
-    final tier = RepositoryProvider.of<BookRepository>(context).currentTier;
+    final tier = RepositoryProvider.of<BookRepository>(context, listen: false).currentTier;
 
     if (mode == OmniVisionMode.batch && tier == 'Hobbyist') { _showUpgradeDialog('Pro'); return; }
     if (mode == OmniVisionMode.spatial && tier != 'Enterprise') { _showUpgradeDialog('Enterprise'); return; }
@@ -171,8 +171,8 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   Future<void> _handleFocusTap() async {
     if (_isProcessing || _controller == null || !_controller!.value.isInitialized) return;
     
-    final repository = RepositoryProvider.of<BookRepository>(context);
-    final storage = RepositoryProvider.of<CloudStorageService>(context);
+    final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
+    final storage = RepositoryProvider.of<CloudStorageService>(context, listen: false);
 
     HapticFeedback.lightImpact();
     setState(() {
@@ -194,17 +194,17 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
         final bool isBuy = recommendation['decision'] == 'buy';
         final String isbn = metadata['isbn13'] ?? metadata['isbn10'] ?? '';
         
-        bool isWish = _activeWishlist.any((w) => w.isbn == isbn || (metadata['title']?.toString().contains(w.isbn) ?? false));
+        final bool isWish = _activeWishlist.any((w) => w.isbn == isbn || (metadata['title']?.toString().contains(w.isbn) ?? false));
 
         if (isWish) {
           HapticFeedback.vibrate();
-          if (_isVoiceEnabled) _tts.speak("Wish match detected! Platinum opportunity.");
+          if (_isVoiceEnabled) _tts.speak('Wish match detected! Platinum opportunity.');
         } else if (isBuy) {
           HapticFeedback.heavyImpact();
-          if (_isVoiceEnabled) _tts.speak("Buy detected. Profit ${profit.toInt()} dollars.");
+          if (_isVoiceEnabled) _tts.speak('Buy detected. Profit ${profit.toInt()} dollars.');
         } else {
           HapticFeedback.mediumImpact();
-          if (_isVoiceEnabled) _tts.speak("Skip.");
+          if (_isVoiceEnabled) _tts.speak('Skip.');
         }
 
         _scanHistory.insert(0, {'metadata': metadata, 'recommendation': recommendation});
@@ -240,11 +240,11 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
       final typeRoll = _random.nextInt(10);
       AnalysisType spineType = typeRoll < 4 ? AnalysisType.pass : (typeRoll < 7 ? AnalysisType.buy : AnalysisType.setPiece);
       
-      bool isWishMatch = _random.nextInt(15) == 0;
+      final bool isWishMatch = _random.nextInt(15) == 0;
       if (isWishMatch) {
         spineType = AnalysisType.wishVision;
         HapticFeedback.vibrate();
-        if (_isVoiceEnabled) _tts.speak("Wish match detected!");
+        if (_isVoiceEnabled) _tts.speak('Wish match detected!');
       }
 
       _spatialDetections.add(DetectedSpine(
@@ -337,7 +337,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
 
     if (_focusStatus == AnalysisStatus.analyzing) return Container(color: Colors.black45, child: const Center(child: CircularProgressIndicator(color: AppColors.secondary)));
 
-    Color color = _isWishMatch ? Colors.amber : (_focusStatus == AnalysisStatus.buy ? AppColors.primary : Colors.black87);
+    final Color color = _isWishMatch ? Colors.amber : (_focusStatus == AnalysisStatus.buy ? AppColors.primary : Colors.black87);
     
     return Container(
       decoration: BoxDecoration(
@@ -443,7 +443,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   }
 
   Widget _buildModeTab(OmniVisionMode mode, IconData icon, String label) {
-    bool active = _currentMode == mode;
+    final bool active = _currentMode == mode;
     return GestureDetector(onTap: () => _switchMode(mode), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(icon, color: active ? AppColors.secondary : Colors.white54), Text(label, style: TextStyle(color: active ? Colors.white : Colors.white54, fontSize: 10))]));
   }
 
@@ -472,7 +472,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
       isSigned: _isWishMatch, // Placeholder for signature logic during save
       scrapedData: ScrapedData(originalRetailPrice: (_lastRecommendation?['original_retail_price'] as num?)?.toDouble())
     );
-    await RepositoryProvider.of<BookRepository>(context).saveBook(book);
+    await RepositoryProvider.of<BookRepository>(context, listen: false).saveBook(book);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved to VisionHub!'), backgroundColor: AppColors.secondary));
     setState(() => _focusStatus = AnalysisStatus.none);
   }
@@ -482,8 +482,8 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
     setState(() { _isProcessing = true; _statusMessage = 'ANALYZING...'; });
     try {
       final xFile = await _controller!.takePicture();
-      final gcsUri = await RepositoryProvider.of<CloudStorageService>(context).uploadImage(File(xFile.path));
-      final books = await RepositoryProvider.of<BookRepository>(context).batchProcessShelf(gcsUri!);
+      final gcsUri = await RepositoryProvider.of<CloudStorageService>(context, listen: false).uploadImage(File(xFile.path));
+      final books = await RepositoryProvider.of<BookRepository>(context, listen: false).batchProcessShelf(gcsUri!);
       context.pushReplacement('/review_vision', extra: books);
     } catch (e) { setState(() { _isProcessing = false; }); }
   }
@@ -491,8 +491,8 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
   Future<void> _handleSignatureTap() async {
     if (_isProcessing || _controller == null || !_controller!.value.isInitialized) return;
     
-    final repository = RepositoryProvider.of<BookRepository>(context);
-    final storage = RepositoryProvider.of<CloudStorageService>(context);
+    final repository = RepositoryProvider.of<BookRepository>(context, listen: false);
+    final storage = RepositoryProvider.of<CloudStorageService>(context, listen: false);
 
     HapticFeedback.lightImpact();
     setState(() {
@@ -512,7 +512,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
         HapticFeedback.vibrate();
         
         if (isSigned) {
-          if (_isVoiceEnabled) _tts.speak("Signature detected. Verifying signer.");
+          if (_isVoiceEnabled) _tts.speak('Signature detected. Verifying signer.');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Signature Found: ${result['signer_name']}'),
@@ -520,7 +520,7 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
             ),
           );
         } else {
-          if (_isVoiceEnabled) _tts.speak("No signature detected.");
+          if (_isVoiceEnabled) _tts.speak('No signature detected.');
         }
 
         setState(() {
@@ -537,6 +537,6 @@ class _OmniVisionScreenState extends State<OmniVisionScreen> with SingleTickerPr
 enum AnalysisStatus { none, analyzing, buy, skip, unknown }
 enum AnalysisType { buy, pass, setPiece, wishVision }
 class DetectedSpine {
-  final String id; final double x; final double y; final AnalysisType type; final String label;
   DetectedSpine({required this.id, required this.x, required this.y, required this.type, required this.label});
+  final String id; final double x; final double y; final AnalysisType type; final String label;
 }

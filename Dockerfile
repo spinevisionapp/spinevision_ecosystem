@@ -13,11 +13,11 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
 # Copy the rest of the application's code from the host to the container
 COPY . .
 
 # Run the web server with Gunicorn.
-# Using the shell form for CMD to allow environment variable expansion ($PORT).
-CMD gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 8 --timeout 0 main:app
+# Using the exec form with a shell wrapper to allow $PORT expansion while ensuring proper signal handling.
+CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 8 --timeout 0 main:app"]

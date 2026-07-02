@@ -6,9 +6,6 @@ class PriceVisionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MiniAppPlaceholder(
-      appName: 'PriceVision',
-      description: 'The future home of market analytics & repricing.',
-    );
+    return const MiniAppPlaceholder(title: 'PriceVision');
   }
 }

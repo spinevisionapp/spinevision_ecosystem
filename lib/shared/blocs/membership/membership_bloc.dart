@@ -8,9 +8,6 @@ part 'membership_event.dart';
 part 'membership_state.dart';
 
 class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
-  final AuthService _authService;
-  late final void Function(CustomerInfo) _customerInfoListener;
-  StreamSubscription? _authSubscription;
 
   MembershipBloc(this._authService) : super(const MembershipState()) {
     on<MembershipStarted>(_onStarted);
@@ -31,6 +28,9 @@ class MembershipBloc extends Bloc<MembershipEvent, MembershipState> {
       }
     });
   }
+  final AuthService _authService;
+  late final void Function(CustomerInfo) _customerInfoListener;
+  StreamSubscription? _authSubscription;
 
   Future<void> _onStarted(MembershipStarted event, Emitter<MembershipState> emit) async {
     emit(state.copyWith(isLoading: true));

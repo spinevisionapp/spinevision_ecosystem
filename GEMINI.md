@@ -15,7 +15,7 @@
 | **VisionLocate** | - | Pick & Pack mapping | - |
 | **ProfitVision** | - | - | Cost/Profit Dashboard |
 | **AmazonVision** | - | - | FBA Listing Tool |
-| **TaxVision** | - | - | Taxes & Auto-Mileage |
+| **TaxVision** | - | - | Itemized Taxes & Auto-Mileage |
 | **BundleVision** | - | - | Creation & Optimization |
 | **ChatVision** | - | - | AI Chatbot |
 | **ForecastVision** | - | - | Seasonal/Trend Cycles |
@@ -26,7 +26,6 @@
 ## 2. TODO LIST (Complete)
 
 ### A. Marketing Automation
-- [X] **Task:** Create an automatic Marketing Schedule.
     - [X] Build a Gemini-powered prompt to generate 7 engaging social media posts weekly (Success stories, ROI tips, "BOLO" alerts).
     - [X] Integrate with social APIs (Instagram, TikTok, FB) for daily automated uploads. (Skeletons implemented, ready for API keys).
     - [X] Implement the "Promotion Engine" to grant temporary Pro/Enterprise access to Hobbyists automatically based on usage milestones. (Integrated with Firestore).
@@ -41,6 +40,8 @@
 ### C. Feature Refinement
 - [X] Apply "Locked" UI elements to all restricted features in ProfitVision, VisionHub, and ListingVision.
 - [X] Implement the "Upgrade to Pro/Enterprise" unified paywall screen.
+- [X] **Migration:** Move all `mini_placeholders` into `main_spinevision/features`.
+- [X] **Module Stubs:** Create UI skeletons for Bundle, Listing, Price, Set, and Shelf Pro modules.
 
 ---
-**Status: Blueprint Fully Implemented & Verified.**
+**Status: Migration Complete. All Vision modules integrated into main application core.**
