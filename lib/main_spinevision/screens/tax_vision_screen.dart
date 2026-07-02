@@ -15,14 +15,48 @@ class TaxVisionScreen extends StatefulWidget {
 
 class _TaxVisionScreenState extends State<TaxVisionScreen> {
   bool _isProcessing = false;
-  double _ytdCogs = 4250.00;
-  final double _taxLiability = 637.50;
   
   final List<Map<String, dynamic>> _recentExpenses = [
     {'merchant': 'Goodwill', 'date': 'Oct 24', 'amount': 45.20, 'category': 'COGS'},
     {'merchant': 'Salvation Army', 'date': 'Oct 22', 'amount': 12.00, 'category': 'COGS'},
     {'merchant': 'USPS', 'date': 'Oct 20', 'amount': 8.40, 'category': 'Shipping'},
   ];
+
+  void _showLogTripDialog() {
+    final TextEditingController milesController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Log Sourcing Trip'),
+        content: TextField(
+          controller: milesController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Miles Driven',
+            hintText: '0.0',
+            suffixText: 'mi',
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('CANCEL')),
+          ElevatedButton(
+            onPressed: () {
+              final miles = double.tryParse(milesController.text) ?? 0.0;
+              if (miles > 0) {
+                context.read<BookRepository>().addMileage(miles);
+                setState(() {});
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Logged $miles miles sourcing trip.')),
+                );
+              }
+            },
+            child: const Text('SAVE TRIP'),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _scanReceipt() async {
     final picker = ImagePicker();
@@ -64,6 +98,11 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final repository = context.watch<BookRepository>();
+    final ytdCogs = repository.ytdCogs;
+    final loggedMiles = repository.loggedMiles;
+    final taxLiability = ytdCogs * 0.15; // Estimated 15% self-employment tax
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('TaxVision Ledger'),
@@ -75,9 +114,9 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildFinancialSummary(),
+            _buildFinancialSummary(ytdCogs, taxLiability),
             const SizedBox(height: 32),
-            _buildMileageSection(),
+            _buildMileageSection(loggedMiles),
             const SizedBox(height: 32),
             _buildSectionHeader('Recent Expenses'),
             _buildExpenseList(),
@@ -95,7 +134,7 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
     );
   }
 
-  Widget _buildFinancialSummary() {
+  Widget _buildFinancialSummary(double ytdCogs, double taxLiability) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -108,8 +147,8 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildMetric('YTD COGS', '\$${_ytdCogs.toStringAsFixed(2)}', AppColors.primary),
-              _buildMetric('TAX EST.', '\$${_taxLiability.toStringAsFixed(2)}', AppColors.error),
+              _buildMetric('YTD COGS', '\$${ytdCogs.toStringAsFixed(2)}', AppColors.primary),
+              _buildMetric('TAX EST.', '\$${taxLiability.toStringAsFixed(2)}', AppColors.error),
             ],
           ),
           const Divider(height: 40),
@@ -143,7 +182,8 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
     );
   }
 
-  Widget _buildMileageSection() {
+  Widget _buildMileageSection(double loggedMiles) {
+    final deduction = loggedMiles * 0.67;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -159,28 +199,28 @@ class _TaxVisionScreenState extends State<TaxVisionScreen> {
             children: [
               const Text('AUTO-MILEAGE', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondary)),
               ElevatedButton(
-                onPressed: () {}, 
+                onPressed: _showLogTripDialog, 
                 style: ElevatedButton.styleFrom(backgroundColor: AppColors.secondary, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0), minimumSize: const Size(0, 32)),
                 child: const Text('LOG TRIP', style: TextStyle(fontSize: 10)),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          const Row(
+          Row(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('1,240', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text('TOTAL MILES', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  Text(loggedMiles.toStringAsFixed(0), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const Text('TOTAL MILES', style: TextStyle(fontSize: 10, color: Colors.grey)),
                 ],
               ),
-              SizedBox(width: 40),
+              const SizedBox(width: 40),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('\$830.80', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green)),
-                  Text('DEDUCTION', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  Text('\$${deduction.toStringAsFixed(2)}', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green)),
+                  const Text('DEDUCTION', style: TextStyle(fontSize: 10, color: Colors.grey)),
                 ],
               ),
             ],

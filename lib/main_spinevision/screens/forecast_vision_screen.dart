@@ -11,7 +11,8 @@ class ForecastVisionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firestore = Provider.of<FirestoreService>(context);
-    const String currentTier = 'Enterprise';
+    final repository = context.watch<BookRepository>();
+    final String currentTier = repository.currentTier;
 
     return Scaffold(
       appBar: AppBar(

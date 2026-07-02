@@ -189,6 +189,22 @@ class BookRepository {
     return response['data'] ?? {};
   }
 
+  Future<void> activatePromotion(String key) async {
+    final response = await _apiService.activatePromotion(key);
+    // After activating, sync the subscription status locally
+    // In a real app, this would update RevenueCat, but here we just refresh
+    // For this prototype, we'll manually set the tier if the response is successful
+    if (response['data']?['status'] == 'success') {
+      if (key == 'Pro_Trial') _currentTier = 'Pro';
+      if (key == 'Enterprise_Trial') _currentTier = 'Enterprise';
+    }
+  }
+
+  Future<Map<String, dynamic>> getMilestones() async {
+    final response = await _apiService.getMilestones();
+    return response['data'] ?? {};
+  }
+
   Future<Map<String, dynamic>> getSocialPosts() async {
     final response = await _apiService.getSocialPosts();
     return response['data'] ?? {};

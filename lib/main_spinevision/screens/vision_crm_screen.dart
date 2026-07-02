@@ -11,8 +11,8 @@ class VisionCrmScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firestore = Provider.of<FirestoreService>(context);
-    // In a real app, we'd get the tier from a UserBloc or similar
-    const String currentTier = 'Enterprise'; 
+    final repository = context.watch<BookRepository>();
+    final String currentTier = repository.currentTier;
 
     return Scaffold(
       appBar: AppBar(

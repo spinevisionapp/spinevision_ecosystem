@@ -61,6 +61,11 @@ class ApiService {
   Future<Map<String, dynamic>> analyzeSet(Map<String, dynamic> bookJson) =>
       post('/analyze_set', {'book': bookJson});
 
+  Future<Map<String, dynamic>> activatePromotion(String key) => 
+      post('/activate_promotion', {'promotion_key': key});
+
+  Future<Map<String, dynamic>> getMilestones() => post('/milestones', {});
+
   Future<Map<String, dynamic>> getSocialPosts() =>
       post('/generate_social_content', {});
 

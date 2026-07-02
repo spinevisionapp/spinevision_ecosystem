@@ -22,22 +22,34 @@ class _MarketingVisionScreenState extends State<MarketingVisionScreen> {
 
   Future<void> _loadSocialContent() async {
     try {
-      final repository = RepositoryProvider.of<BookRepository>(context);
-      // Simulating the backend AI generation
-      await Future.delayed(const Duration(seconds: 1));
+      final repository = context.read<BookRepository>();
+      final posts = await repository.getSocialPosts();
       
       if (mounted) {
         setState(() {
-          _weeklySchedule = {
-            'Monday': {'type': 'Success Story', 'content': 'Just found this first edition Tolkien! Sourced for \$2, selling for \$85. ROI is insane! #SpineVision', 'status': 'Draft'},
-            'Wednesday': {'type': 'BOLO Alert', 'content': 'Keep an eye out for 1980s computer programming guides. Collector demand is spiking! #ResellerTips', 'status': 'Draft'},
-            'Friday': {'type': 'Weekly Tally', 'content': 'Another \$450 in potential profit found this week using OmniVision. Sourcing made easy.', 'status': 'Draft'},
-          };
+          _weeklySchedule = posts.map((key, value) => MapEntry(key, {
+            'type': _getPostType(key),
+            'content': value,
+            'status': 'Draft',
+          }));
           _isLoading = false;
         });
       }
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  String _getPostType(String day) {
+    switch (day) {
+      case 'Monday': return 'Success Story';
+      case 'Tuesday': return 'ROI Tip';
+      case 'Wednesday': return 'BOLO Alert';
+      case 'Thursday': return 'FAQ/Expert';
+      case 'Friday': return 'Feature';
+      case 'Saturday': return 'Community';
+      case 'Sunday': return 'Strategy';
+      default: return 'Social Post';
     }
   }
 
@@ -72,7 +84,10 @@ class _MarketingVisionScreenState extends State<MarketingVisionScreen> {
             ),
           ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          setState(() => _isLoading = true);
+          _loadSocialContent();
+        },
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.auto_awesome, color: Colors.white),
         label: const Text('RE-GENERATE WEEK', style: TextStyle(color: Colors.white)),
