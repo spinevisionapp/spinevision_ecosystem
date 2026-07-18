@@ -1,4 +1,4 @@
-Lisa Jones # 📚 SpineVision: User Walkthrough Guide
+# 📚 SpineVision: User Walkthrough Guide
 
 Welcome to **SpineVision**, the ultimate ecosystem for book resellers. This guide will walk you through your first sourcing trip and show you how to scale your business from a Hobbyist to a full-scale Enterprise using our AI-driven tools.
 

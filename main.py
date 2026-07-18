@@ -36,19 +36,28 @@ api_key = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=api_key)
 
 # Global resource initialization for efficiency
-storage_client = storage.Client()
+from google.oauth2 import service_account
+from firebase_admin import credentials
+
+# Load service account credentials
+service_account_path = "serviceAccount.json"
+
+# Firebase Admin initialization
+cred = credentials.Certificate(service_account_path)
+firebase_admin.initialize_app(cred)
+
+# Firestore client
+db = firestore.client()
+
+# Cloud Storage client
+storage_credentials = service_account.Credentials.from_service_account_file(
+    service_account_path
+)
+storage_client = storage.Client(credentials=storage_credentials)
+
+# Gemini model
 vision_model = genai.GenerativeModel('gemini-2.0-flash')
 
-# Initialize Firestore for caching
-try:
-    if not firebase_admin._apps:
-        # Use the environment variable for portability
-        project_id = os.getenv("FIREBASE_PROJECT_ID", "spinevision-6abad")
-        firebase_admin.initialize_app(options={'projectId': project_id})
-    db = firestore.client()
-except Exception as e:
-    logger.warning(f"Failed to initialize Firestore: {e}")
-    db = None
 
 def download_image_to_temp(gs_uri):
     """Downloads an image from GCS to a temporary file and returns the path."""
@@ -1630,6 +1639,23 @@ def respond_ticket(ticket_id):
     })
     return redirect(f'/ticket/{ticket_id}')
 
+# -------------------------------
+# Application startup block
+# -------------------------------
 if __name__ == '__main__':
+    # Read port from environment or default to 8080
     port = int(os.getenv("PORT", 8080))
-    app.run(host='0.0.0.0', port=port, debug=True)
+
+    # Detect environment mode (default: development)
+    env = os.getenv("ENV", "development").lower()
+
+    # Run the app with safe settings
+    print(f"Starting SpineVision backend in {env} mode on port {port}")
+    if env == "development":
+        # Development mode: no auto-reload, minimal debug
+        app.run(host='0.0.0.0', port=port, debug=False)
+    else:
+        # Production mode: stable, no reloader
+        app.run(host='0.0.0.0', port=port)
+
+
