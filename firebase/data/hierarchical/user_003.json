@@ -1,0 +1,56 @@
+{
+  "library": [
+    {
+      "id": "lib_004",
+      "user_id": "user_003",
+      "book_id": "book_004",
+      "title": "Clean Code",
+      "author": "Robert C. Martin",
+      "isbn": "9780132350884",
+      "condition": "New",
+      "acquired_price": 25.0,
+      "acquired_date": "2023-10-10"
+    }
+  ],
+  "listings": [
+    {
+      "id": "list_004",
+      "user_id": "user_003",
+      "book_id": "book_004",
+      "title": "Clean Code",
+      "platform": "Amazon",
+      "price": 35.0,
+      "status": "active",
+      "date_listed": "2023-10-11"
+    }
+  ],
+  "crm": [
+    {
+      "id": "crm_003",
+      "user_id": "user_003",
+      "customer_name": "Charlie Brown",
+      "email": "charlie@example.com",
+      "last_purchase_date": "2023-10-12",
+      "total_spent": 300.25
+    }
+  ],
+  "sales": [
+    {
+      "id": "prof_003",
+      "user_id": "user_003",
+      "month": "2023-09",
+      "total_revenue": 1200.0,
+      "total_cost": 400.0,
+      "net_profit": 800.0
+    }
+  ],
+  "settings": [
+    {
+      "id": "mem_003",
+      "user_id": "user_003",
+      "tier": "Enterprise",
+      "status": "active",
+      "renewal_date": "2023-11-10"
+    }
+  ]
+}

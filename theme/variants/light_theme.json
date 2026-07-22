@@ -1,0 +1,10 @@
+{
+  "name": "SpineVision Light",
+  "colors": {
+    "background": "#FFFFFF",
+    "surface": "#F6F9FC",
+    "text": "#1A1F25",
+    "textSecondary": "#425466",
+    "border": "#E6EBF1"
+  }
+}

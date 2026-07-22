@@ -1,0 +1,16 @@
+{
+  "pages": [
+    {
+      "name": "SocialFeedPage",
+      "path": "/social",
+      "type": "feed",
+      "accessTier": "Pro"
+    },
+    {
+      "name": "SocialComposerPage",
+      "path": "/social/compose",
+      "type": "form",
+      "accessTier": "Pro"
+    }
+  ]
+}

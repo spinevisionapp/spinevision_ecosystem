@@ -1,0 +1,19 @@
+{
+  "widgets": [
+    {
+      "name": "NavBar",
+      "type": "navigation",
+      "items": ["Home", "Scan", "Library", "Listing", "Support"]
+    },
+    {
+      "name": "VisionScanner",
+      "type": "custom",
+      "module": "OmniVision"
+    },
+    {
+      "name": "TierGateWrapper",
+      "type": "container",
+      "description": "Blurs content if user tier is insufficient"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+[
+  { "id": "soc_001", "user_id": "user_001", "platform": "Instagram", "content": "Just found a first edition Gatsby! #reseller #books", "scheduled_time": "2023-10-16T09:00:00Z", "status": "scheduled" },
+  { "id": "soc_002", "user_id": "user_002", "platform": "TikTok", "content": "How I make $500/week flipping books. #sidehustle", "scheduled_time": "2023-10-17T12:00:00Z", "status": "draft" },
+  { "id": "soc_003", "user_id": "user_003", "platform": "Facebook", "content": "BOLO Alert: Modern tech books are selling fast!", "scheduled_time": "2023-10-15T18:00:00Z", "status": "posted" }
+]

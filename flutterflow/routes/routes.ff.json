@@ -1,0 +1,12 @@
+{
+  "routes": {
+    "/": "HomePage",
+    "/scan": "ScanPage",
+    "/library": "LibraryPage",
+    "/listing": "ListingPage",
+    "/support": "SupportPage",
+    "/analytics": "AnalyticsPage",
+    "/social": "SocialVisionPage",
+    "/promotions": "PromotionsPage"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "components": [
+    {
+      "name": "MembershipBadge",
+      "params": ["tierName", "color"],
+      "usage": "Top of profile and dashboard"
+    },
+    {
+      "name": "BOLOAlertCard",
+      "module": "VisionHub",
+      "description": "Trending book alerts"
+    },
+    {
+      "name": "PricingTable",
+      "description": "Tier comparison and upgrade triggers"
+    }
+  ]
+}

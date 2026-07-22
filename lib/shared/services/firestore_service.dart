@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spinevision_ecosystem/shared/data/models/book_model.dart';
 
-/// Service handling all Firestore interactions for the user's ecosystem.
+/// Service handling all Firestore interactions for the SpineVision ecosystem.
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -10,36 +10,43 @@ class FirestoreService {
   String get _uid => FirebaseAuth.instance.currentUser?.uid ?? 'user_123';
 
   DocumentReference get _userDoc => _db.collection('users').doc(_uid);
-  CollectionReference get _inventoryCol => _userDoc.collection('inventory');
-  CollectionReference get _ledgerCol => _userDoc.collection('ledger');
-  CollectionReference get _setsCol => _userDoc.collection('sets');
-  CollectionReference get _wishlistCol => _userDoc.collection('wishlist');
-  CollectionReference get _bundlesCol => _userDoc.collection('bundles');
-  CollectionReference get _ticketsCol => _userDoc.collection('tickets');
-  CollectionReference get _customersCol => _userDoc.collection('customers');
-  CollectionReference get _locationsCol => _userDoc.collection('locations');
-  CollectionReference get _forecastsCol => _userDoc.collection('forecasts');
-  CollectionReference get _mileageCol => _userDoc.collection('mileage');
+  
+  // Subcollections (Per-User)
+  CollectionReference get _libraryCol => _userDoc.collection('library');
+  CollectionReference get _listingsCol => _userDoc.collection('listings');
+  CollectionReference get _salesCol => _userDoc.collection('sales');
+  CollectionReference get _scansCol => _userDoc.collection('scans');
+  CollectionReference get _crmCol => _userDoc.collection('crm');
+  CollectionReference get _analyticsCol => _userDoc.collection('analytics');
+  CollectionReference get _settingsCol => _userDoc.collection('settings');
+  
+  // Global Collections
+  CollectionReference get _supportCol => _db.collection('support');
+  CollectionReference get _metadataCol => _db.collection('metadata');
 
-  // --- User Profile & Stats ---
+  // --- User Profile & Settings ---
 
-  Future<Map<String, dynamic>> getUserData() async {
-    final doc = await _userDoc.get();
-    return doc.data() as Map<String, dynamic>? ?? {};
+  Future<UserSettingsModel?> getUserSettings() async {
+    final doc = await _settingsCol.doc('profile').get();
+    if (!doc.exists) return null;
+    return UserSettingsModel.fromJson(doc.data() as Map<String, dynamic>);
   }
 
-  // --- Inventory (Books) ---
+  Future<void> saveUserSettings(UserSettingsModel settings) async {
+    await _settingsCol.doc('profile').set(settings.toJson(), SetOptions(merge: true));
+  }
+
+  // --- Library (Books) ---
 
   Future<void> saveBook(BookModel book) async {
-    final docId = book.id ?? _inventoryCol.doc().id;
-    await _inventoryCol
+    final docId = book.id ?? _libraryCol.doc().id;
+    await _libraryCol
         .doc(docId)
         .set(book.copyWith(id: docId).toJson(), SetOptions(merge: true));
   }
 
-  Stream<List<BookModel>> getInventoryStream() {
-    return _inventoryCol
-        .orderBy('dateSourced', descending: true)
+  Stream<List<BookModel>> getLibraryStream() {
+    return _libraryCol
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
@@ -50,94 +57,87 @@ class FirestoreService {
         );
   }
 
-  Future<List<BookModel>> getInventoryOnce() async {
-    final snapshot = await _inventoryCol.get();
-    return snapshot.docs
-        .map((doc) => BookModel.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+  // --- Scans ---
+
+  Future<void> saveScan(ScanModel scan) async {
+    final docId = scan.scanId ?? _scansCol.doc().id;
+    await _scansCol.doc(docId).set(scan.copyWith(scanId: docId).toJson());
   }
 
-  // --- Ledger (Expenses/TaxVision) ---
-
-  Future<void> saveExpense(ExpenseModel expense) async {
-    final docId = expense.id ?? _ledgerCol.doc().id;
-    await _ledgerCol
-        .doc(docId)
-        .set(expense.copyWith(id: docId).toJson(), SetOptions(merge: true));
-  }
-
-  Stream<List<ExpenseModel>> getLedgerStream() {
-    return _ledgerCol
-        .orderBy('date', descending: true)
+  Stream<List<ScanModel>> getScansStream() {
+    return _scansCol
+        .orderBy('timestamp', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
               .map(
-                (doc) =>
-                    ExpenseModel.fromJson(doc.data() as Map<String, dynamic>),
+                (doc) => ScanModel.fromJson(doc.data() as Map<String, dynamic>),
               )
               .toList(),
         );
   }
 
-  // --- Sets & Series ---
+  // --- Listings ---
 
-  Future<void> saveSeries(SeriesModel series) async {
-    final docId = series.id ?? _setsCol.doc().id;
-    await _setsCol.doc(docId).set(series.toJson());
+  Future<void> saveListing(ListingModel listing) async {
+    final docId = listing.listingId ?? _listingsCol.doc().id;
+    await _listingsCol.doc(docId).set(listing.copyWith(listingId: docId).toJson());
   }
 
-  Stream<List<SeriesModel>> getSetsStream() {
-    return _setsCol.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map(
-            (doc) => SeriesModel.fromJson(doc.data() as Map<String, dynamic>),
-          )
-          .toList(),
-    );
+  Stream<List<ListingModel>> getListingsStream() {
+    return _listingsCol.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => ListingModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 
-  // --- Wishlist ---
+  // --- Sales ---
 
-  Future<void> saveWish(WishModel wish) async {
-    final docId = wish.id ?? _wishlistCol.doc().id;
-    await _wishlistCol.doc(docId).set(wish.toJson());
+  Future<void> saveSale(SaleModel sale) async {
+    final docId = sale.saleId ?? _salesCol.doc().id;
+    await _salesCol.doc(docId).set(sale.copyWith(saleId: docId).toJson());
   }
 
-  Stream<List<WishModel>> getWishlistStream() {
-    return _wishlistCol.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map((doc) => WishModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList(),
-    );
+  Stream<List<SaleModel>> getSalesStream() {
+    return _salesCol.orderBy('dateSold', descending: true).snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => SaleModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 
-  // --- Bundles ---
+  // --- CRM (Buyers) ---
 
-  Future<void> saveBundle(BundleModel bundle) async {
-    final docId = bundle.id ?? _bundlesCol.doc().id;
-    await _bundlesCol.doc(docId).set(bundle.toJson());
+  Future<void> saveBuyer(BuyerModel buyer) async {
+    final docId = buyer.buyerId ?? _crmCol.doc().id;
+    await _crmCol.doc(docId).set(buyer.copyWith(buyerId: docId).toJson());
   }
 
-  Stream<List<BundleModel>> getBundlesStream() {
-    return _bundlesCol.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map(
-            (doc) => BundleModel.fromJson(doc.data() as Map<String, dynamic>),
-          )
-          .toList(),
-    );
+  Stream<List<BuyerModel>> getBuyersStream() {
+    return _crmCol.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => BuyerModel.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 
   // --- Support Tickets ---
 
   Future<void> createTicket(SupportTicket ticket) async {
-    final docId = _ticketsCol.doc().id;
-    await _ticketsCol.doc(docId).set(ticket.copyWith(id: docId).toJson());
+    final docId = _supportCol.doc().id;
+    await _supportCol.doc(docId).set(ticket.copyWith(id: docId).toJson());
   }
 
   Stream<List<SupportTicket>> getMyTicketsStream() {
-    return _ticketsCol
+    return _supportCol
+        .where('userId', isEqualTo: _uid)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
@@ -150,73 +150,18 @@ class FirestoreService {
         );
   }
 
-  // --- CRM ---
+  // --- Analytics ---
 
-  Future<void> saveCustomer(CustomerModel customer) async {
-    final docId = customer.id ?? _customersCol.doc().id;
-    await _customersCol.doc(docId).set(customer.copyWith(id: docId).toJson());
+  Future<void> saveAnalyticsSnapshot(AnalyticsSnapshotModel snapshot) async {
+    final docId = snapshot.snapshotId ?? _analyticsCol.doc().id;
+    await _analyticsCol.doc(docId).set(snapshot.copyWith(snapshotId: docId).toJson());
   }
 
-  Stream<List<CustomerModel>> getCustomersStream() {
-    return _customersCol.snapshots().map(
+  Stream<List<AnalyticsSnapshotModel>> getAnalyticsStream() {
+    return _analyticsCol.orderBy('timestamp', descending: true).snapshots().map(
           (snapshot) => snapshot.docs
               .map(
-                (doc) =>
-                    CustomerModel.fromJson(doc.data() as Map<String, dynamic>),
-              )
-              .toList(),
-        );
-  }
-
-  // --- Locate ---
-
-  Future<void> saveLocation(LocationModel location) async {
-    final docId = location.id ?? _locationsCol.doc().id;
-    await _locationsCol.doc(docId).set(location.copyWith(id: docId).toJson());
-  }
-
-  Stream<List<LocationModel>> getLocationsStream() {
-    return _locationsCol.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) =>
-                    LocationModel.fromJson(doc.data() as Map<String, dynamic>),
-              )
-              .toList(),
-        );
-  }
-
-  // --- Forecast ---
-
-  Future<void> saveForecast(ForecastModel forecast) async {
-    final docId = forecast.id ?? _forecastsCol.doc().id;
-    await _forecastsCol.doc(docId).set(forecast.copyWith(id: docId).toJson());
-  }
-
-  Stream<List<ForecastModel>> getForecastsStream() {
-    return _forecastsCol.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) =>
-                    ForecastModel.fromJson(doc.data() as Map<String, dynamic>),
-              )
-              .toList(),
-        );
-  }
-
-  // --- Mileage ---
-
-  Future<void> saveMileage(MileageModel mileage) async {
-    final docId = mileage.id ?? _mileageCol.doc().id;
-    await _mileageCol.doc(docId).set(mileage.copyWith(id: docId).toJson());
-  }
-
-  Stream<List<MileageModel>> getMileageStream() {
-    return _mileageCol.orderBy('date', descending: true).snapshots().map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) =>
-                    MileageModel.fromJson(doc.data() as Map<String, dynamic>),
+                (doc) => AnalyticsSnapshotModel.fromJson(doc.data() as Map<String, dynamic>),
               )
               .toList(),
         );

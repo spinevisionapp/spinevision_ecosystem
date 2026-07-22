@@ -1,0 +1,6 @@
+[
+  { "id": "price_001", "book_id": "book_001", "isbn": "9780743273565", "market_price_new": 15.99, "market_price_used": 8.50, "last_updated": "2023-10-15" },
+  { "id": "price_002", "book_id": "book_002", "isbn": "9780451524935", "market_price_new": 12.00, "market_price_used": 5.00, "last_updated": "2023-10-15" },
+  { "id": "price_003", "book_id": "book_003", "isbn": "9780547928227", "market_price_new": 20.00, "market_price_used": 12.00, "last_updated": "2023-10-15" },
+  { "id": "price_004", "book_id": "book_004", "isbn": "9780132350884", "market_price_new": 45.00, "market_price_used": 30.00, "last_updated": "2023-10-15" }
+]

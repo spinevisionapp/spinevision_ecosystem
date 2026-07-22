@@ -1,0 +1,5 @@
+[
+  { "id": "supp_001", "user_id": "user_001", "subject": "Scanning issue", "message": "The scanner is not autofocusing on small text.", "status": "open", "category": "Technical" },
+  { "id": "supp_002", "user_id": "user_002", "subject": "Subscription question", "message": "When will my Pro trial end?", "status": "closed", "category": "Billing" },
+  { "id": "supp_003", "user_id": "user_003", "subject": "FBA Integration", "message": "I need help linking my Amazon Seller account.", "status": "open", "category": "Feature Support" }
+]

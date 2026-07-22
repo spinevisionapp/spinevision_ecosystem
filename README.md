@@ -1,116 +1,46 @@
-# SpineVision Ecosystem - App Blueprint
+# SpineVision: The AI-Driven Book Reselling Ecosystem
 
-This repository contains the complete Flutter-based mobile app blueprint for the **SpineVision** ecosystem, by Lisa Jones. The project is structured as a modular mobile application suite, including the main app, a fast-scanning mini-app, and placeholders for future extensions.
+SpineVision is a professional-grade, AI-powered ecosystem designed to revolutionize the book reselling industry. By leveraging cutting-edge computer vision (Gemini 2.0) and a modular, cloud-native architecture, SpineVision empowers resellers of all levels—from hobbyists to enterprise powerhouses—with actionable "Vision" at every step of their workflow.
 
-## Core Technologies & Architecture
+## Mission
+Our mission is to eliminate the friction in book reselling through intelligent automation, real-time market insights, and spatial intelligence, allowing users to scale their businesses with unprecedented efficiency.
 
-- **Framework**: [Flutter](https://flutter.dev/)
-- **Language**: [Dart](https://dart.dev/)
-- **Architecture**: Modular Monorepo
-  - The project is organized into a main application (`main_spinevision`), several mini-apps (`mini_thriftvision`, `mini_placeholders`), and a `shared` library. This approach promotes code reuse and independent development of features.
-- **State Management**: [flutter_bloc](https://bloclibrary.dev/)
-  - BLoC (Business Logic Component) is used to separate presentation from business logic, making the app more scalable and testable.
-- **Navigation**: [go_router](https://pub.dev/packages/go_router)
-  - A declarative routing package for Flutter that simplifies navigation, deeplinking, and passing arguments between screens.
-- **Styling**: A custom theme is defined in `lib/shared/theme`, using the specified **Purple (#4c3a87)** and **Teal (#2bb3a3)** color scheme. Typography is managed with [Google Fonts](https://pub.dev/packages/google_fonts).
+## Core Modules (The "Vision" Suite)
 
-## Project Structure
+### OmniVision (The Sourcing Engine)
+*   **ThriftVision (Free):** Lightning-fast in-store scanning for quick "Buy/Pass" decisions.
+*   **ShelfVision (Mid):** Batch AI scanning that identifies multiple book spines simultaneously from a single photo.
+*   **SpatialVision (Top):** Real-time AR "walk-by" scanning using Gemini 2.0 Live for instant identification of high-value inventory.
 
-```
-.
-├── lib
-│   ├── main.dart                   # Main app entry point
-│   ├── main_spinevision            # Code for the main SpineVision app
-│   │   ├── bloc                    # Feature-specific and global state management
-│   │   ├── features                # Integrated business modules
-│   │   │   ├── bundle_vision       # ROI Set Optimization
-│   │   │   ├── listing_vision      # AI Multi-channel Drafting
-│   │   │   ├── marketing_vision    # Social Media Automation
-│   │   │   ├── price_vision        # Real-time Market Analysis
-│   │   │   ├── set_vision          # Series Tracking
-│   │   │   ├── shelf_vision_pro    # Batch AI Scanning
-│   │   │   ├── support_vision      # AI Chatbot & Tiered Ticketing
-│   │   │   └── tax_vision          # Itemized Receipt Scanning & COGS
-│   │   ├── screens                 # Core UI Screens
-│   │   └── widgets                 # Main app components
-│   ├── mini_thriftvision           # Code for the ThriftVision mini-app
-│   │   └── screens
-│   └── shared                      # Shared code used across the ecosystem
-│       ├── data
-│       │   ├── models              # Shared data models (e.g., book_model.dart)
-│       │   └── repositories        # Data repositories (e.g., book_repository.dart)
-│       ├── navigation              # Routing and navigation logic (routes.dart)
-│       ├── services                # Backend services, camera integration, etc.
-│       ├── theme                   # App-wide theme, colors, and styles
-│       └── widgets                 # Common reusable widgets
-└── pubspec.yaml                    # Project dependencies
-```
+### Management & Growth
+*   **LibraryVision (Mid):** Centralized digital library and listing management system.
+*   **ListingVision (Mid):** Multi-platform, desktop-style listing builder with AI-optimized copywriting.
+*   **VisionHub (Mid):** The "BOLO" (Be On the Look-Out) feed for currently trending, high-profit books.
+*   **AmazonVision (Top):** Deep integration with Amazon FBA, including logistics, Keepa analysis, and ungating tools.
 
-## Running the Application
+### Intelligence & Operations
+*   **ProfitVision (Top):** Advanced cost/profit dashboards and sales performance tracking.
+*   **TaxVision (Top):** Automated itemized receipt scanning, mileage logs, and tax-ready data exports.
+*   **SetVision (Mid):** Intelligent identification of book sets and missing volumes to maximize ROI.
+*   **SupportVision (Mid):** Tiered support system with integrated AI troubleshooting and live agent access.
 
-1.  **Install Flutter**: Ensure you have Flutter installed on your system. Follow the [official installation guide](https://docs.flutter.dev/get-started/install).
-2.  **Install Dependencies**: From the root of the project, run:
-    ```bash
-    flutter pub get
-    ```
-3.  **Run the App**:
-    ```bash
-    flutter run
-    ```
+## Tech Stack
+*   **Frontend:** [Flutter](https://flutter.dev/) (Cross-platform Mobile & Web)
+*   **UI/UX Engine:** [FlutterFlow](https://www.flutterflow.io/)
+*   **AI Orchestrator:** [Gemini 2.0](https://deepmind.google/technologies/gemini/) (Vertex AI)
+*   **Backend:** [Firebase](https://firebase.google.com/) (Firestore, Auth, Storage, Cloud Functions)
+*   **Compute:** [Google Cloud Run](https://cloud.google.com/run) (Python/FastAPI)
+*   **Entitlements:** [RevenueCat](https://www.revenuecat.com/)
 
-## Backend Services & API Contracts
+## Membership Tiers
+1.  **Hobbyist (Free):** Basic sourcing and price lookups.
+2.  **Professional ($49/mo):** Advanced batch scanning, library management, and market trends.
+3.  **Enterprise ($99/mo):** Full suite access including Amazon FBA tools, AR scanning, and advanced tax/profit analytics.
 
-This blueprint focuses on the frontend application. A complete implementation requires a backend server to handle complex logic like AI analysis and web scraping.
+## Getting Started
+For detailed setup instructions, please refer to:
+*   [LAUNCH_INSTRUCTIONS.md](./LAUNCH_INSTRUCTIONS.md)
+*   [docs/SPINEVISION_USER_WALKTHROUGH.md](./docs/SPINEVISION_USER_WALKTHROUGH.md)
 
-### Suggested Backend Tech Stack
-
--   **Language**: Python (with FastAPI or Flask) or Node.js (with Express)
--   **Database**: Firebase Firestore or a PostgreSQL database.
--   **AI/ML**: Python libraries like TensorFlow, PyTorch, or services like Google Cloud Vision AI.
--   **Web Scraping**: Python libraries like `BeautifulSoup` and `Requests`, or a service like Scrapy Cloud.
-
-### API Endpoints (Example)
-
-#### `POST /api/v1/scan/image`
-
--   **Description**: Analyzes an image of a book (or a shelf of books) to extract information.
--   **Request Body**: `multipart/form-data` with an image file.
--   **Response Body**:
-    ```json
-    {
-      "books": [
-        {
-          "isbn": "978-0547928227",
-          "title": "The Hobbit",
-          "author": "J.R.R. Tolkien",
-          // ... other extracted fields
-          "scraped_data": {
-            "cover_image_url": "...",
-            "description": "...",
-            "original_retail_price": 24.99,
-            "comparable_prices": [
-              { "marketplace": "Amazon", "price": 19.99, "url": "..." },
-              { "marketplace": "eBay", "price": 18.50, "url": "..." }
-            ],
-            "sales_rank": 1500,
-            "is_part_of_set": true
-          }
-        }
-      ]
-    }
-    ```
-
-#### `POST /api/v1/scan/thrift_vision`
-
--   **Description**: A lightweight endpoint for the ThriftVision mini-app to get a quick "buy/skip" recommendation.
--   **Request Body**: `multipart/form-data` with an image file.
--   **Response Body**:
-    ```json
-    {
-      "decision": "buy", // "buy", "skip", "unknown"
-      "profit_estimate": 12.50,
-      "demand_score": 85, // 0-100
-      "best_platform": "eBay"
-    }
-    ```
-This concludes the blueprint for the SpineVision ecosystem. The project is now structured and ready for detailed implementation of each feature.
+---
+Developed by **Lisa Jones**. Powered by **Gemini AI**.

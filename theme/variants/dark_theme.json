@@ -1,0 +1,10 @@
+{
+  "name": "SpineVision Dark",
+  "colors": {
+    "background": "#0A2540",
+    "surface": "#1A1F25",
+    "text": "#F6F9FC",
+    "textSecondary": "#E6EBF1",
+    "border": "#425466"
+  }
+}

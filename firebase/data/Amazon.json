@@ -1,0 +1,5 @@
+[
+  { "id": "amz_001", "user_id": "user_003", "sku": "SV-BK-001", "asin": "B000000001", "fnsku": "X000000001", "fulfillment_center": "LAS2", "inventory_level": 10 },
+  { "id": "amz_002", "user_id": "user_003", "sku": "SV-BK-002", "asin": "B000000002", "fnsku": "X000000002", "fulfillment_center": "ONT8", "inventory_level": 5 },
+  { "id": "amz_003", "user_id": "user_002", "sku": "SV-BK-003", "asin": "B000000003", "fnsku": "X000000003", "fulfillment_center": "PHX6", "inventory_level": 2 }
+]

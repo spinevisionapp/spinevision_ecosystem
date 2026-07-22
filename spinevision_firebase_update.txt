@@ -1,0 +1,208 @@
+SPINEVISION FIREBASE AND FIRESTORE ECOSYSTEM UPDATE
+PROJECT: spine-vision-en691p
+
+OBJECTIVE:
+Update and regenerate the complete Firebase and Firestore ecosystem for SpineVision using the navigation structure and task list provided.
+
+NAVIGATION STRUCTURE ALIGNMENT:
+The following models and schemas are mapped to the primary navigation tabs:
+DashVision: analytics, sales, user settings.
+OmniVision: scans, library (acquisition).
+NexusVision: library, listings, bundles, sets, wishlists, refurbish.
+OperateVision: sales, crm, amazon, tax.
+AssistVision: support, membership.
+
+14 FIRESTORE DATABASE SCHEMA (LOGICAL)
+- users: Global profiles and membership status.
+- library: Master book inventory per user.
+- listings: Marketplace listings (Amazon, eBay, etc.).
+- scans: History of all OCR/AR scans (Thrift, Shelf, Spatial).
+- crm: Buyer records and interaction history.
+- sales: Financial transactions and profit/loss data.
+- analytics: Periodic snapshots for dashboard graphs.
+- tags: Categorization taxonomy (Global + User).
+- bundles: Multi-item listing groups.
+- sets: Series and volume tracking.
+- wishlists: Items targeted for sourcing.
+- refurbish: Restoration task tracking.
+- support: Help desk tickets and FAQ.
+- membership: Tier-based access control data.
+
+15 BOOK DATA MODEL
+{
+  "isbn": "string",
+  "title": "string",
+  "author": "string",
+  "publisher": "string",
+  "publish_date": "timestamp",
+  "genre": "string",
+  "format": "string",
+  "language": "string",
+  "page_count": "number",
+  "weight": "number",
+  "dimensions": { "l": "number", "w": "number", "h": "number" },
+  "description": "string",
+  "thumbnail_url": "string",
+  "tags": ["string"],
+  "condition_rating": "number",
+  "metadata": "map"
+}
+
+16 SCAN DATA MODEL
+{
+  "scan_id": "string",
+  "user_id": "string",
+  "timestamp": "timestamp",
+  "type": "string",
+  "isbn_detected": "string",
+  "image_ref": "string",
+  "overlay_data": "map",
+  "result": "string",
+  "location": "geopoint",
+  "session_id": "string"
+}
+
+17 LISTING DATA MODEL
+{
+  "listing_id": "string",
+  "user_id": "string",
+  "book_id": "string",
+  "platform": "string",
+  "external_id": "string",
+  "price": "number",
+  "shipping_cost": "number",
+  "status": "string",
+  "date_listed": "timestamp",
+  "date_sold": "timestamp",
+  "notes": "string",
+  "history": [
+    { "timestamp": "timestamp", "action": "string", "details": "string" }
+  ]
+}
+
+18 BUYER DATA MODEL
+{
+  "buyer_id": "string",
+  "user_id": "string",
+  "name": "string",
+  "email": "string",
+  "phone": "string",
+  "address": { "street": "string", "city": "string", "state": "string", "zip": "string", "country": "string" },
+  "purchase_count": "number",
+  "total_spent": "number",
+  "tags": ["string"],
+  "notes": "string"
+}
+
+19 SALES DATA MODEL
+{
+  "sale_id": "string",
+  "user_id": "string",
+  "listing_id": "string",
+  "buyer_id": "string",
+  "gross_amount": "number",
+  "net_amount": "number",
+  "fees": "number",
+  "tax_amount": "number",
+  "shipping_paid": "number",
+  "date_sold": "timestamp",
+  "payment_status": "string",
+  "fulfillment_status": "string"
+}
+
+20 TAGGING SYSTEM
+- Model: tag_id, user_id, label, color, category.
+- Propagation: Library tags flow to Listings and Sales.
+- Logic: Auto-tagging triggers on scan (e.g., 'High-Value' if price > $50).
+
+21 ANALYTICS SNAPSHOT MODEL
+{
+  "snapshot_id": "string",
+  "user_id": "string",
+  "period": "string",
+  "timestamp": "timestamp",
+  "metrics": {
+    "total_revenue": "number",
+    "total_profit": "number",
+    "inventory_count": "number",
+    "sell_through_rate": "number"
+  }
+}
+
+22 USER SETTINGS MODEL
+{
+  "user_id": "string",
+  "membership_tier": "string",
+  "preferences": {
+    "default_platform": "string",
+    "notification_enabled": "boolean",
+    "currency": "string"
+  },
+  "api_keys": "map",
+  "last_sync": "timestamp"
+}
+
+23 FIRESTORE INDEXING STRATEGY
+- listings: user_id (ASC) + status (ASC) + date_listed (DESC)
+- scans: user_id (ASC) + timestamp (DESC)
+- sales: user_id (ASC) + date_sold (DESC)
+- library: user_id (ASC) + isbn (ASC)
+- crm: user_id (ASC) + total_spent (DESC)
+
+24 DATA RELATIONSHIP MAP
+- users (1) -> library (N)
+- library (1) -> listings (N)
+- listings (1) -> sales (1)
+- crm (1) -> sales (N)
+- scans (1) -> library (0..1)
+
+25 DATA VALIDATION RULES
+- Prices must be non-negative.
+- ISBNs must be valid 10/13 formats.
+- Required: user_id on all user-specific subcollections.
+- Statuses must be from defined enums.
+
+26 DATA MIGRATION STRATEGY
+- version field on all documents.
+- Background worker (Orchestrator) for bulk updates.
+- Incremental migration on document read.
+
+27 FIRESTORE IMPLEMENTATION MAP (NATIVE)
+- users/{uid}
+- users/{uid}/settings
+- users/{uid}/library/{lib_id}
+- users/{uid}/listings/{list_id}
+- users/{uid}/sales/{sale_id}
+- users/{uid}/scans/{scan_id}
+- users/{uid}/crm/{buyer_id}
+- support/tickets
+- metadata/faq
+
+28 CLOUD STORAGE STRUCTURE
+- /users/{uid}/scans/
+- /users/{uid}/listings/
+- /users/{uid}/exports/
+- /system/assets/
+
+34 FIRESTORE SECURITY RULES BLUEPRINT
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth.uid == userId;
+    }
+    match /support/{ticketId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth.uid == resource.data.userId || isAdmin();
+    }
+    match /metadata/faq { allow read: if true; }
+  }
+}
+
+ADDITIONAL ARCHITECTURAL DETAILS
+- Module relationships: OmniVision feeds NexusVision; NexusVision feeds OperateVision; OperateVision feeds DashVision.
+- Document ID strategy: Auth UID for users, ISBN for library, Auto-ID for transactions.
+- Offline-first: Firestore local persistence enabled.
+- FlutterFlow compatibility: Single-level subcollections under users root.
+- Gemini integration: Image processing for scans, text generation for marketing, sentiment analysis for support.
+- Orchestrator: Central controller for cross-platform data synchronization.
+

@@ -1,0 +1,5 @@
+[
+  { "id": "loc_001", "user_id": "user_001", "name": "Shelf A1", "book_ids": ["book_001", "book_002"] },
+  { "id": "loc_002", "user_id": "user_002", "name": "Bin 4", "book_ids": ["book_003"] },
+  { "id": "loc_003", "user_id": "user_003", "name": "Office Desk", "book_ids": ["book_004"] }
+]

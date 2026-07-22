@@ -1,0 +1,40 @@
+{
+  "pages": [
+    {
+      "name": "HomePage",
+      "path": "/",
+      "type": "dashboard",
+      "accessTier": "Free"
+    },
+    {
+      "name": "ScanPage",
+      "path": "/scan",
+      "type": "camera",
+      "accessTier": "Free"
+    },
+    {
+      "name": "LibraryPage",
+      "path": "/library",
+      "type": "list",
+      "accessTier": "Pro"
+    },
+    {
+      "name": "ListingPage",
+      "path": "/listing",
+      "type": "form",
+      "accessTier": "Pro"
+    },
+    {
+      "name": "SupportPage",
+      "path": "/support",
+      "type": "chat",
+      "accessTier": "Free"
+    },
+    {
+      "name": "AnalyticsPage",
+      "path": "/analytics",
+      "type": "chart",
+      "accessTier": "Enterprise"
+    }
+  ]
+}

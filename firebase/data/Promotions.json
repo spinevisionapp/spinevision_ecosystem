@@ -1,0 +1,5 @@
+[
+  { "id": "promo_001", "user_id": "user_001", "promotion_type": "pro_trial", "trigger": "10_scans_milestone", "start_date": "2023-10-15", "end_date": "2023-10-22" },
+  { "id": "promo_002", "user_id": "user_002", "promotion_type": "enterprise_discount", "trigger": "high_volume_seller", "start_date": "2023-10-01", "end_date": "2023-10-31" },
+  { "id": "promo_003", "user_id": "user_003", "promotion_type": "referral_bonus", "trigger": "user_referred", "start_date": "2023-10-10", "end_date": "2023-11-10" }
+]

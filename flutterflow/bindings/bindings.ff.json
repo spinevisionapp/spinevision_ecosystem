@@ -1,0 +1,19 @@
+{
+  "bindings": [
+    {
+      "source": "firestore",
+      "collection": "users",
+      "fields": ["membershipTier", "usageCount", "preferences"]
+    },
+    {
+      "source": "firestore",
+      "collection": "scans",
+      "fields": ["isbn", "title", "author", "marketValue"]
+    },
+    {
+      "source": "firestore",
+      "collection": "promotions",
+      "fields": ["promoId", "active", "expiryDate"]
+    }
+  ]
+}

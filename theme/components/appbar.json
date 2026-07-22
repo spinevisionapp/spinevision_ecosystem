@@ -1,0 +1,9 @@
+{
+  "appBar": {
+    "backgroundColor": "tokens.colors.primary",
+    "elevation": 0,
+    "centerTitle": false,
+    "titleTextStyle": "typography.styles.h2",
+    "iconColor": "#FFFFFF"
+  }
+}

@@ -1,0 +1,5 @@
+[
+  { "id": "crm_001", "user_id": "user_001", "customer_name": "Alice Smith", "email": "alice@example.com", "last_purchase_date": "2023-09-15", "total_spent": 45.50 },
+  { "id": "crm_002", "user_id": "user_002", "customer_name": "Bob Johnson", "email": "bob@example.com", "last_purchase_date": "2023-10-01", "total_spent": 120.00 },
+  { "id": "crm_003", "user_id": "user_003", "customer_name": "Charlie Brown", "email": "charlie@example.com", "last_purchase_date": "2023-10-12", "total_spent": 300.25 }
+]

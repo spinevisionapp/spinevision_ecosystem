@@ -1,0 +1,8 @@
+{
+  "divider": {
+    "thickness": 1.0,
+    "color": "tokens.colors.neutral.100",
+    "indent": 0.0,
+    "endIndent": 0.0
+  }
+}

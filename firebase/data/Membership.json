@@ -1,0 +1,5 @@
+[
+  { "id": "mem_001", "user_id": "user_001", "tier": "Hobbyist", "status": "active", "renewal_date": "2023-11-01" },
+  { "id": "mem_002", "user_id": "user_002", "tier": "Pro", "status": "active", "renewal_date": "2023-11-05" },
+  { "id": "mem_003", "user_id": "user_003", "tier": "Enterprise", "status": "active", "renewal_date": "2023-11-10" }
+]

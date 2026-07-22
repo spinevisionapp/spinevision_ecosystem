@@ -1,0 +1,6 @@
+[
+  { "id": "list_001", "user_id": "user_001", "book_id": "book_001", "title": "The Great Gatsby", "platform": "eBay", "price": 12.99, "status": "active", "date_listed": "2023-10-02" },
+  { "id": "list_002", "user_id": "user_001", "book_id": "book_002", "title": "1984", "platform": "Amazon", "price": 15.50, "status": "active", "date_listed": "2023-10-06" },
+  { "id": "list_003", "user_id": "user_002", "book_id": "book_003", "title": "The Hobbit", "platform": "eBay", "price": 10.00, "status": "sold", "date_listed": "2023-09-21" },
+  { "id": "list_004", "user_id": "user_003", "book_id": "book_004", "title": "Clean Code", "platform": "Amazon", "price": 35.00, "status": "active", "date_listed": "2023-10-11" }
+]

@@ -1,0 +1,65 @@
+{
+  "library": [
+    {
+      "id": "lib_003",
+      "user_id": "user_002",
+      "book_id": "book_003",
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "isbn": "9780547928227",
+      "condition": "Acceptable",
+      "acquired_price": 1.5,
+      "acquired_date": "2023-09-20"
+    }
+  ],
+  "listings": [
+    {
+      "id": "list_003",
+      "user_id": "user_002",
+      "book_id": "book_003",
+      "title": "The Hobbit",
+      "platform": "eBay",
+      "price": 10.0,
+      "status": "sold",
+      "date_listed": "2023-09-21"
+    }
+  ],
+  "scans": [
+    {
+      "id": "scan_003",
+      "user_id": "user_002",
+      "isbn": "9780547928227",
+      "timestamp": "2023-10-15T11:00:00Z",
+      "result": "found"
+    }
+  ],
+  "crm": [
+    {
+      "id": "crm_002",
+      "user_id": "user_002",
+      "customer_name": "Bob Johnson",
+      "email": "bob@example.com",
+      "last_purchase_date": "2023-10-01",
+      "total_spent": 120.0
+    }
+  ],
+  "sales": [
+    {
+      "id": "prof_002",
+      "user_id": "user_002",
+      "month": "2023-09",
+      "total_revenue": 500.0,
+      "total_cost": 200.0,
+      "net_profit": 300.0
+    }
+  ],
+  "settings": [
+    {
+      "id": "mem_002",
+      "user_id": "user_002",
+      "tier": "Pro",
+      "status": "active",
+      "renewal_date": "2023-11-05"
+    }
+  ]
+}

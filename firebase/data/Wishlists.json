@@ -1,0 +1,5 @@
+[
+  { "id": "wish_001", "user_id": "user_001", "title": "The Catcher in the Rye", "author": "J.D. Salinger", "max_price": 5.00, "priority": "High" },
+  { "id": "wish_002", "user_id": "user_002", "title": "The Silmarillion", "author": "J.R.R. Tolkien", "max_price": 10.00, "priority": "Medium" },
+  { "id": "wish_003", "user_id": "user_003", "title": "Refactoring", "author": "Martin Fowler", "max_price": 30.00, "priority": "High" }
+]

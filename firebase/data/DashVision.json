@@ -1,0 +1,5 @@
+[
+  { "id": "dash_001", "user_id": "user_001", "layout": "default", "enabled_widgets": ["inventory_summary", "recent_scans"] },
+  { "id": "dash_002", "user_id": "user_002", "layout": "compact", "enabled_widgets": ["inventory_summary", "profit_chart", "bolo_feed"] },
+  { "id": "dash_003", "user_id": "user_003", "layout": "advanced", "enabled_widgets": ["inventory_summary", "profit_chart", "amazon_fba_status", "crm_alerts"] }
+]

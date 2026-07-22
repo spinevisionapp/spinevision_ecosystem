@@ -1,0 +1,93 @@
+{
+  "library": [
+    {
+      "id": "lib_001",
+      "user_id": "user_001",
+      "book_id": "book_001",
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "isbn": "9780743273565",
+      "condition": "Good",
+      "acquired_price": 2.5,
+      "acquired_date": "2023-10-01"
+    },
+    {
+      "id": "lib_002",
+      "user_id": "user_001",
+      "book_id": "book_002",
+      "title": "1984",
+      "author": "George Orwell",
+      "isbn": "9780451524935",
+      "condition": "Like New",
+      "acquired_price": 3.0,
+      "acquired_date": "2023-10-05"
+    }
+  ],
+  "listings": [
+    {
+      "id": "list_001",
+      "user_id": "user_001",
+      "book_id": "book_001",
+      "title": "The Great Gatsby",
+      "platform": "eBay",
+      "price": 12.99,
+      "status": "active",
+      "date_listed": "2023-10-02"
+    },
+    {
+      "id": "list_002",
+      "user_id": "user_001",
+      "book_id": "book_002",
+      "title": "1984",
+      "platform": "Amazon",
+      "price": 15.5,
+      "status": "active",
+      "date_listed": "2023-10-06"
+    }
+  ],
+  "scans": [
+    {
+      "id": "scan_001",
+      "user_id": "user_001",
+      "isbn": "9780743273565",
+      "timestamp": "2023-10-15T10:30:00Z",
+      "result": "found"
+    },
+    {
+      "id": "scan_002",
+      "user_id": "user_001",
+      "isbn": "1234567890123",
+      "timestamp": "2023-10-15T10:35:00Z",
+      "result": "not_found"
+    }
+  ],
+  "crm": [
+    {
+      "id": "crm_001",
+      "user_id": "user_001",
+      "customer_name": "Alice Smith",
+      "email": "alice@example.com",
+      "last_purchase_date": "2023-09-15",
+      "total_spent": 45.5
+    }
+  ],
+  "sales": [
+    {
+      "id": "prof_001",
+      "user_id": "user_001",
+      "month": "2023-09",
+      "total_revenue": 150.0,
+      "total_cost": 45.0,
+      "net_profit": 105.0
+    }
+  ],
+  "settings": [
+    {
+      "id": "mem_001",
+      "user_id": "user_001",
+      "tier": "Hobbyist",
+      "status": "active",
+      "renewal_date": "2023-11-01"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "actions": {
+    "checkTierAccess": {
+      "params": ["requiredTier"],
+      "logic": "Compare currentUser.membershipTier with requiredTier. If lower, navigate to UpgradePage."
+    },
+    "triggerMarketingPost": {
+      "module": "SocialVision",
+      "logic": "Generate and schedule posts using Gemini and Social API."
+    },
+    "applyUsagePromotion": {
+      "module": "PromotionEngine",
+      "logic": "Upgrade user tier temporarily based on scanning milestones."
+    }
+  }
+}

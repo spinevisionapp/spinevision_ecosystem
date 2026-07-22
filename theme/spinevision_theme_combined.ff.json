@@ -1,0 +1,16 @@
+{
+  "themeName": "SpineVision Master",
+  "version": "1.0.0",
+  "tokens": "tokens/tokens.json",
+  "typography": "typography/typography.json",
+  "effects": "effects/gradients.json",
+  "variants": {
+    "light": "variants/light_theme.json",
+    "dark": "variants/dark_theme.json"
+  },
+  "components": {
+    "inputs": "components/inputs.json",
+    "dividers": "components/dividers.json",
+    "appbar": "components/appbar.json"
+  }
+}

@@ -1,0 +1,5 @@
+[
+  { "id": "prof_001", "user_id": "user_001", "month": "2023-09", "total_revenue": 150.00, "total_cost": 45.00, "net_profit": 105.00 },
+  { "id": "prof_002", "user_id": "user_002", "month": "2023-09", "total_revenue": 500.00, "total_cost": 200.00, "net_profit": 300.00 },
+  { "id": "prof_003", "user_id": "user_003", "month": "2023-09", "total_revenue": 1200.00, "total_cost": 400.00, "net_profit": 800.00 }
+]

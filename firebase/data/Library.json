@@ -1,0 +1,6 @@
+[
+  { "id": "lib_001", "user_id": "user_001", "book_id": "book_001", "title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "isbn": "9780743273565", "condition": "Good", "acquired_price": 2.50, "acquired_date": "2023-10-01" },
+  { "id": "lib_002", "user_id": "user_001", "book_id": "book_002", "title": "1984", "author": "George Orwell", "isbn": "9780451524935", "condition": "Like New", "acquired_price": 3.00, "acquired_date": "2023-10-05" },
+  { "id": "lib_003", "user_id": "user_002", "book_id": "book_003", "title": "The Hobbit", "author": "J.R.R. Tolkien", "isbn": "9780547928227", "condition": "Acceptable", "acquired_price": 1.50, "acquired_date": "2023-09-20" },
+  { "id": "lib_004", "user_id": "user_003", "book_id": "book_004", "title": "Clean Code", "author": "Robert C. Martin", "isbn": "9780132350884", "condition": "New", "acquired_price": 25.00, "acquired_date": "2023-10-10" }
+]

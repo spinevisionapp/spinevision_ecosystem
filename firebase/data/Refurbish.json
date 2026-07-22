@@ -1,0 +1,5 @@
+[
+  { "id": "ref_001", "user_id": "user_001", "book_id": "book_003", "issue": "Spine glue loose", "status": "pending", "estimated_cost": 2.00 },
+  { "id": "ref_002", "user_id": "user_002", "book_id": "book_001", "issue": "Price sticker residue", "status": "in_progress", "estimated_cost": 0.50 },
+  { "id": "ref_003", "user_id": "user_003", "book_id": "book_002", "issue": "Page corner folds", "status": "done", "estimated_cost": 0.00 }
+]

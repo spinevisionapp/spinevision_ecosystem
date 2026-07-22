@@ -1,0 +1,19 @@
+{
+  "gradients": {
+    "primary": {
+      "colors": ["#0A2540", "#635BFF"],
+      "begin": "topLeft",
+      "end": "bottomRight"
+    },
+    "accent": {
+      "colors": ["#635BFF", "#00D4FF"],
+      "begin": "centerLeft",
+      "end": "centerRight"
+    },
+    "gold": {
+      "colors": ["#FFD700", "#B8860B"],
+      "begin": "topCenter",
+      "end": "bottomCenter"
+    }
+  }
+}

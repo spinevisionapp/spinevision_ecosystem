@@ -1,0 +1,5 @@
+[
+  { "id": "set_001", "user_id": "user_002", "name": "LOTR Trilogy", "series": "The Lord of the Rings", "total_volumes": 3, "owned_volumes": [1], "missing_volumes": [2, 3] },
+  { "id": "set_002", "user_id": "user_001", "name": "Great Gatsby Collection", "series": "Fitzgerald Works", "total_volumes": 5, "owned_volumes": [1, 2], "missing_volumes": [3, 4, 5] },
+  { "id": "set_003", "user_id": "user_003", "name": "Clean Series", "series": "Robert Martin", "total_volumes": 3, "owned_volumes": [1, 2, 3], "missing_volumes": [] }
+]

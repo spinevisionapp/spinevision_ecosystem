@@ -1,0 +1,5 @@
+[
+  { "id": "bundle_001", "user_id": "user_001", "name": "Classic Dystopia Pack", "book_ids": ["book_001", "book_002"], "price": 25.00, "status": "active" },
+  { "id": "bundle_002", "user_id": "user_002", "name": "Fantasy Starter", "book_ids": ["book_003"], "price": 9.50, "status": "draft" },
+  { "id": "bundle_003", "user_id": "user_003", "name": "Dev Excellence", "book_ids": ["book_004", "book_005"], "price": 60.00, "status": "active" }
+]

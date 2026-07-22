@@ -1,0 +1,5 @@
+[
+  { "id": "scan_001", "user_id": "user_001", "isbn": "9780743273565", "timestamp": "2023-10-15T10:30:00Z", "result": "found" },
+  { "id": "scan_002", "user_id": "user_001", "isbn": "1234567890123", "timestamp": "2023-10-15T10:35:00Z", "result": "not_found" },
+  { "id": "scan_003", "user_id": "user_002", "isbn": "9780547928227", "timestamp": "2023-10-15T11:00:00Z", "result": "found" }
+]

@@ -1,0 +1,5 @@
+[
+  { "id": "tax_001", "user_id": "user_001", "type": "mileage", "amount": 15.75, "date": "2023-10-10", "description": "Sourcing trip to Goodwill" },
+  { "id": "tax_002", "user_id": "user_002", "type": "supplies", "amount": 45.00, "date": "2023-10-12", "description": "Shipping boxes and tape" },
+  { "id": "tax_003", "user_id": "user_003", "type": "software", "amount": 99.00, "date": "2023-10-01", "description": "SpineVision Enterprise Subscription" }
+]

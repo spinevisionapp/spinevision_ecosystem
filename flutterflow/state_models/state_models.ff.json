@@ -1,0 +1,14 @@
+{
+  "globalState": {
+    "isScanning": "boolean",
+    "currentBookId": "string",
+    "userTier": "string",
+    "activePromotions": "list<string>"
+  },
+  "pageState": {
+    "ScanPage": {
+      "flashEnabled": "boolean",
+      "cameraPreviewReady": "boolean"
+    }
+  }
+}

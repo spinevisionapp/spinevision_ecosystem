@@ -1,0 +1,14 @@
+{
+  "inputDecoration": {
+    "filled": true,
+    "fillColor": "tokens.colors.neutral.50",
+    "border": {
+      "type": "outline",
+      "borderRadius": "tokens.borderRadius.md",
+      "borderColor": "tokens.colors.neutral.100"
+    },
+    "focusedBorder": {
+      "borderColor": "tokens.colors.secondary"
+    }
+  }
+}
