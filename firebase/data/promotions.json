@@ -1,4 +1,0 @@
-[
-  { "id": "promo_101", "user_id": "user_101", "promotion_type": "holiday_special", "trigger": "seasonal", "start_date": "2023-12-01", "end_date": "2023-12-31" },
-  { "id": "promo_102", "user_id": "user_102", "promotion_type": "loyal_user", "trigger": "100_scans_milestone", "start_date": "2023-11-01", "end_date": "2023-11-30" }
-]

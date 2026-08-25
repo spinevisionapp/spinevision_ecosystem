@@ -1,4 +1,0 @@
-[
-  { "id": "soc_101", "user_id": "user_101", "platform": "Twitter", "content": "Just updated SpineVision. The scan speed is insane! #SpineVision #Reseller", "scheduled_time": "2023-10-18T10:00:00Z", "status": "scheduled" },
-  { "id": "soc_102", "user_id": "user_102", "platform": "LinkedIn", "content": "Professional book reselling at scale with SpineVision. Check our new BOLO feed.", "scheduled_time": "2023-10-19T14:00:00Z", "status": "draft" }
-]
