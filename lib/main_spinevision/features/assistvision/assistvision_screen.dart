@@ -79,7 +79,7 @@ class _AssistVisionScreenState extends State<AssistVisionScreen> {
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isBot ? Colors.grey[200] : AppColors.primary.withOpacity(0.1),
+                    color: isBot ? Colors.grey[200] : AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16).copyWith(
                       bottomLeft: isBot ? Radius.zero : const Radius.circular(16),
                       bottomRight: isBot ? const Radius.circular(16) : Radius.zero,

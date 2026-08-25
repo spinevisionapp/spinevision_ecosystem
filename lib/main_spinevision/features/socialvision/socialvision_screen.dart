@@ -29,11 +29,11 @@ class _SocialVisionScreenState extends State<SocialVisionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Automated Marketing', style: AppTextStyles.headlineMedium),
+            const Text('Automated Marketing', style: AppTextStyles.headlineMedium),
             const SizedBox(height: 8),
-            Text('Generate AI-powered content for your social media.', style: AppTextStyles.bodyMedium),
+            const Text('Generate AI-powered content for your social media.', style: AppTextStyles.bodyMedium),
             const SizedBox(height: 24),
-            Text('Target Platforms', style: AppTextStyles.titleMedium),
+            const Text('Target Platforms', style: AppTextStyles.titleMedium),
             Wrap(
               spacing: 8,
               children: _platforms.map((p) => FilterChip(
@@ -43,7 +43,7 @@ class _SocialVisionScreenState extends State<SocialVisionScreen> {
               )).toList(),
             ),
             const SizedBox(height: 24),
-            Text('Post Generator', style: AppTextStyles.titleLarge),
+            const Text('Post Generator', style: AppTextStyles.titleLarge),
             const SizedBox(height: 12),
             Card(
               child: Padding(
@@ -69,7 +69,7 @@ class _SocialVisionScreenState extends State<SocialVisionScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            Text('Scheduled Posts', style: AppTextStyles.titleLarge),
+            const Text('Scheduled Posts', style: AppTextStyles.titleLarge),
             const SizedBox(height: 12),
             _buildScheduledPost(
               'ROI Tips: Why First Editions Matter',

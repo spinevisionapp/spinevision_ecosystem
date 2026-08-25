@@ -23,7 +23,7 @@ class PromoVisionScreen extends StatelessWidget {
           children: [
             _buildCurrentTierCard(),
             const SizedBox(height: 24),
-            Text('Membership Tiers', style: AppTextStyles.titleLarge),
+            const Text('Membership Tiers', style: AppTextStyles.titleLarge),
             const SizedBox(height: 12),
             _buildTierOption(
               context,
@@ -52,7 +52,7 @@ class PromoVisionScreen extends StatelessWidget {
               isCurrent: false,
             ),
             const SizedBox(height: 32),
-            Text('Milestone Rewards', style: AppTextStyles.titleLarge),
+            const Text('Milestone Rewards', style: AppTextStyles.titleLarge),
             const SizedBox(height: 12),
             _buildMilestoneProgress('100 Books Scanned', 0.75, 'Get 1 day of Pro Access'),
             _buildMilestoneProgress('First $500 Profit', 0.20, 'Exclusive "Early Bird" Badge'),

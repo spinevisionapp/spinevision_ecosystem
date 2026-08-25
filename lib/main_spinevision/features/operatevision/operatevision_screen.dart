@@ -94,7 +94,7 @@ class _LocateTab extends StatelessWidget {
                 children: [
                   const Icon(Icons.map_outlined, size: 80, color: AppColors.primary),
                   const SizedBox(height: 16),
-                  Text('VisionLocate Map', style: AppTextStyles.titleLarge),
+                  const Text('VisionLocate Map', style: AppTextStyles.titleLarge),
                   const SizedBox(height: 8),
                   const Text('Shelf A, Section 3, Bin 12', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.secondary)),
                   const SizedBox(height: 24),

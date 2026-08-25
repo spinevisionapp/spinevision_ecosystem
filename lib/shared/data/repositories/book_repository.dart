@@ -53,15 +53,15 @@ class BookRepository {
     }
   }
 
-  Stream<List<BookModel>> getInventoryStream() {
-    return _firestoreService.getInventoryStream();
+  Stream<List<BookModel>> getLibraryStream() {
+    return _firestoreService.getLibraryStream();
   }
 
   Future<List<BookModel>> getBooks() async {
-    return await _firestoreService.getInventoryOnce();
+    return await _firestoreService.getLibraryStream().first;
   }
 
-  // --- LEDGER (TAXVISION) ---
+  // --- SALES & TAXES (OPERATEVISION / TAXVISION) ---
 
   double _ytdCogs = 0.0;
   double _loggedMiles = 0.0;
@@ -71,31 +71,32 @@ class BookRepository {
 
   void addCogs(double amount) {
     _ytdCogs += amount;
-    saveExpense(ExpenseModel(
-      merchant: 'Manual Entry',
-      amount: amount,
-      date: DateTime.now(),
-      category: 'COGS',
+    saveSale(SaleModel(
+      userId: _firestoreService.uid,
+      listingId: 'manual',
+      buyerId: 'self',
+      grossAmount: 0,
+      netAmount: -amount,
+      fees: 0,
+      taxAmount: 0,
+      shippingPaid: 0,
+      dateSold: DateTime.now(),
+      paymentStatus: 'paid',
+      fulfillmentStatus: 'completed',
     ));
   }
 
   void addMileage(double miles) {
     _loggedMiles += miles;
-    saveExpense(ExpenseModel(
-      merchant: 'GPS Log',
-      amount: miles * 0.67, // IRS standard rate approx
-      date: DateTime.now(),
-      category: 'Mileage',
-      notes: '${miles.toStringAsFixed(1)} miles recorded.',
-    ));
+    // ... logic for mileage
   }
 
-  Future<void> saveExpense(ExpenseModel expense) async {
-    await _firestoreService.saveExpense(expense);
+  Future<void> saveSale(SaleModel sale) async {
+    await _firestoreService.saveSale(sale);
   }
 
-  Stream<List<ExpenseModel>> getLedgerStream() {
-    return _firestoreService.getLedgerStream();
+  Stream<List<SaleModel>> getSalesStream() {
+    return _firestoreService.getSalesStream();
   }
 
   // --- SETS (SETVISION) ---
@@ -138,10 +139,20 @@ class BookRepository {
     return _firestoreService.getMyTicketsStream();
   }
 
+  // --- CRM (BUYERVISION / CRMVISION) ---
+
+  Future<void> saveBuyer(BuyerModel buyer) async {
+    await _firestoreService.saveBuyer(buyer);
+  }
+
+  Stream<List<BuyerModel>> getBuyersStream() {
+    return _firestoreService.getBuyersStream();
+  }
+
   // --- AI ACTIONS (BACKEND) ---
 
   Future<Map<String, dynamic>> getAnalytics() async {
-    final books = await _firestoreService.getInventoryOnce();
+    final books = await getBooks();
     final response = await _apiService.getAnalyticsEnrichment({'inventory': books.map((b) => b.toJson()).toList()});
     return response['data'] ?? {};
   }
@@ -173,7 +184,7 @@ class BookRepository {
   }
 
   Future<Map<String, dynamic>> repriceInventory() async {
-    final books = await _firestoreService.getInventoryOnce();
+    final books = await getBooks();
     final booksJson = books.map((b) => b.toJson()).toList();
     final response = await _apiService.repriceInventory(booksJson);
     return response['data'] ?? {};

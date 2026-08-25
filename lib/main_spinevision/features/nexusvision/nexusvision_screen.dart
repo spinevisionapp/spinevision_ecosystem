@@ -21,9 +21,9 @@ class NexusVisionScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Connected Services', style: AppTextStyles.headlineMedium),
+            const Text('Connected Services', style: AppTextStyles.headlineMedium),
             const SizedBox(height: 8),
-            Text('Manage your external marketplace integrations.', style: AppTextStyles.bodyMedium),
+            const Text('Manage your external marketplace integrations.', style: AppTextStyles.bodyMedium),
             const SizedBox(height: 24),
             _buildServiceTile(
               context,
@@ -52,7 +52,7 @@ class NexusVisionScreen extends StatelessWidget {
               color: Colors.green,
             ),
             const SizedBox(height: 32),
-            Text('Sync Controls', style: AppTextStyles.titleLarge),
+            const Text('Sync Controls', style: AppTextStyles.titleLarge),
             const SizedBox(height: 16),
             Card(
               child: Padding(
@@ -99,7 +99,7 @@ class NexusVisionScreen extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color),
@@ -132,7 +132,7 @@ class NexusVisionScreen extends StatelessWidget {
         Switch(
           value: value,
           onChanged: (val) {},
-          activeColor: AppColors.secondary,
+          activeThumbColor: AppColors.secondary,
         ),
       ],
     );

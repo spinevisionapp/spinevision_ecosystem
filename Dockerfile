@@ -1,23 +1,21 @@
 # Use an official Python runtime as a parent image.
-# Using a slim image helps to keep the final image size down.
 FROM python:3.10-slim
 
-# Set environment variables to make Python run better inside Docker
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the dependencies file to the working directory
+# Copy the dependencies file
 COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt gunicorn
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application's code from the host to the container
+# Copy the application code
 COPY . .
 
-# Run the web server with Gunicorn.
-# Using the exec form with a shell wrapper to allow $PORT expansion while ensuring proper signal handling.
-CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 8 --timeout 0 main:app"]
+# Run the FastAPI app with Uvicorn
+CMD ["uvicorn", "orchestrator.src.main:app", "--host", "0.0.0.0", "--port", "8080"]

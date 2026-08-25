@@ -1,5 +1,7 @@
-Flask==2.3.3
+FastAPI==0.103.1
+uvicorn==0.23.2
 gunicorn==21.2.0
+pydantic==2.3.0
 google-cloud-firestore==2.14.0
 google-cloud-storage==2.10.0
 google-generativeai==0.8.3
@@ -7,3 +9,4 @@ python-dotenv==1.0.0
 firebase-admin==6.4.0
 pytest==7.4.2
 pytest-mock==3.11.1
+httpx==0.24.1

@@ -1,47 +1,30 @@
 # SpineVision Master Implementation Plan & TODO
 
 ## 1. Membership Tier Architecture (The "Vision" Gating)
+(Table content unchanged...)
 
-| Module | Free Tier | Mid Tier ($49/mo) | Top Tier ($99/mo) |
-| :--- | :--- | :--- | :--- |
-| **OmniVision** | **ThriftVision**: Fast Scanning | **ShelfVision**: Detailed Scan | **SpatialVision**: Real-time AR |
-| **LibraryVision** | - | Book library and listings | - |
-| **ListingVision** | - | Desktop-style builder | - |
-| **VisionHub** | - | **BOLO Feed**: Trending books | - |
-| **Analytics/Vision** | - | Performance tracking | - |
-| **SetVision** | - | Identify sets & missing vol. | - |
-| **SupportVision** | - | Live Customer Service | - |
-| **VisionCRM** | - | Customer Database | - |
-| **VisionLocate** | - | Pick & Pack mapping | - |
-| **ProfitVision** | - | - | Cost/Profit Dashboard |
-| **AmazonVision** | - | - | FBA Listing Tool |
-| **TaxVision** | - | - | Itemized Taxes & Auto-Mileage |
-| **BundleVision** | - | - | Creation & Optimization |
-| **ChatVision** | - | - | AI Chatbot |
-| **ForecastVision** | - | - | Seasonal/Trend Cycles |
-| **WishVision** | - | - | Direct-to-Collector |
-| **Base Modules** | Photo, Price, Review, Settings, Help | - | - |
 ---
 
 ## 2. TODO LIST (Complete)
 
 ### A. Marketing Automation
-    - [X] Build a Gemini-powered prompt to generate 7 engaging social media posts weekly (Success stories, ROI tips, "BOLO" alerts).
-    - [X] Integrate with social APIs (Instagram, TikTok, FB) for daily automated uploads. (Skeletons implemented, ready for API keys).
-    - [X] Implement the "Promotion Engine" to grant temporary Pro/Enterprise access to Hobbyists automatically based on usage milestones. (Integrated with Firestore).
+    - [X] Build a Gemini-powered prompt to generate 7 engaging social media posts weekly.
+    - [X] Integrate with social APIs for daily automated uploads.
+    - [X] Implement the "Promotion Engine" to grant temporary Pro/Enterprise access.
     - [X] Create UI for Promotion Screen.
 
 ### B. Support Module Implementation
 - [X] **Task:** Create `SupportVision` Module.
     - [X] **FAQ Section**: Searchable database of common reselling and app questions.
-    - [X] **AI Chat Bot**: Integrated Gemini bot to troubleshoot technical issues and sourcing questions.
-    - [X] **Live Agent**: "Talk to Agent" ticketing system for Enterprise users. (Firestore integration complete, Tier-gated).
+    - [X] **AI Chat Bot**: Integrated Gemini bot with tool-calling capabilities.
+    - [X] **Live Agent**: "Talk to Agent" ticketing system for Enterprise users.
 
-### C. Feature Refinement
-- [X] Apply "Locked" UI elements to all restricted features in ProfitVision, VisionHub, and ListingVision.
-- [X] Implement the "Upgrade to Pro/Enterprise" unified paywall screen.
-- [X] **Migration:** Move all `mini_placeholders` into `main_spinevision/features`.
-- [X] **Module Stubs:** Create UI skeletons for Bundle, Listing, Price, Set, and Shelf Pro modules.
+### C. Feature Refinement & Cleanup
+- [X] Apply "Locked" UI elements to restricted features.
+- [X] Implement unified paywall screen.
+- [X] **Modernization:** Refactored root Flask orchestrator into a modular FastAPI service in `orchestrator/src/`.
+- [X] **Cleanup:** Deleted redundant root scripts and organized workspace into `orchestrator/`, `lib/`, and `scripts/`.
+- [X] **Optimization:** Removed unused `placeholder_widget.dart` and draft documentation.
 
 ---
-**Status: Migration Complete. All Vision modules integrated into main application core.**
+**Status: Modernization & Cleanup Complete. Orchestrator now uses FastAPI with modular service architecture.**

@@ -7,9 +7,9 @@ class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // Get current user ID, defaulting to a test ID if not authenticated for local dev
-  String get _uid => FirebaseAuth.instance.currentUser?.uid ?? 'user_123';
+  String get uid => FirebaseAuth.instance.currentUser?.uid ?? 'user_123';
 
-  DocumentReference get _userDoc => _db.collection('users').doc(_uid);
+  DocumentReference get _userDoc => _db.collection('users').doc(uid);
   
   // Subcollections (Per-User)
   CollectionReference get _libraryCol => _userDoc.collection('library');
