@@ -11,6 +11,7 @@ from pydantic import BaseModel
 
 from .core.config import settings
 from .core.firebase import db
+from .models import schemas
 from .services import (
     vision_service, 
     marketing_service, 
@@ -42,17 +43,16 @@ def get_user_id(request: Request) -> str:
     except Exception:
         return "anonymous-user"
 
-# --- Models ---
+# --- Request Models (Specific to API) ---
 class ImageRequest(BaseModel):
     image_reference: str
-    metadata: Optional[dict] = None
 
 class PricingRequest(BaseModel):
     image_reference: Optional[str] = None
-    book_data: Optional[dict] = None
+    book_data: Optional[schemas.BookModel] = None
 
 class BuyDecisionRequest(BaseModel):
-    book_data: dict
+    book_data: schemas.BookModel
     user_settings: dict
 
 class ChatRequest(BaseModel):
@@ -64,7 +64,7 @@ class ChatRequest(BaseModel):
 async def health():
     return {"status": "healthy", "service": "spinevision-orchestrator"}
 
-@app.post("/extract_metadata")
+@app.post("/extract_metadata", response_model=schemas.BookModel)
 async def extract_metadata(req: ImageRequest, user_id: str = Depends(get_user_id)):
     result = vision_service.extract_metadata(req.image_reference)
     if result and user_id != "anonymous-user":
@@ -89,12 +89,13 @@ async def batch_process_shelf(req: ImageRequest, user_id: str = Depends(get_user
 
 @app.post("/extract_pricing")
 async def extract_pricing(req: PricingRequest):
-    return business_service.extract_pricing(req.book_data, req.image_reference)
+    book_dict = req.book_data.dict() if req.book_data else None
+    return business_service.extract_pricing(book_dict, req.image_reference)
 
 @app.post("/buy_decision")
 async def buy_decision(req: BuyDecisionRequest, user_id: str = Depends(get_user_id)):
     tier = membership_service.get_user_tier(user_id)
-    return business_service.get_buy_decision(req.book_data, req.user_settings, tier=tier)
+    return business_service.get_buy_decision(req.book_data.dict(), req.user_settings, tier=tier)
 
 @app.post("/generate_social_content")
 async def generate_social(user_id: str = Depends(get_user_id)):
@@ -108,6 +109,13 @@ async def chatbot(req: ChatRequest, user_id: str = Depends(get_user_id)):
     answer = support_service.ask_chatbot(req.question, user_id=user_id)
     return {"answer": answer}
 
+@app.get("/check_promotions")
+async def check_promotions(user_id: str = Depends(get_user_id)):
+    if user_id == "anonymous-user":
+        return {"status": "skipped", "reason": "No user ID provided."}
+    result = membership_service.check_milestones(user_id)
+    return {"status": "checked", "result": result}
+
 # --- Support Portal (HTML) ---
 @app.get("/faq", response_class=HTMLResponse)
 async def faq_page(request: Request):
@@ -115,7 +123,8 @@ async def faq_page(request: Request):
 
 @app.get("/tickets", response_class=HTMLResponse)
 async def view_tickets(request: Request):
-    tickets_ref = db.collection('Tickets').order_by('created_at', direction='DESCENDING').stream()
+    from firebase_admin import firestore
+    tickets_ref = db.collection('Tickets').order_by('created_at', direction=firestore.Query.DESCENDING).stream()
     tickets = [{"id": t.id, **t.to_dict()} for t in tickets_ref]
     return templates.TemplateResponse("view_tickets.html", {"request": request, "tickets": tickets})
 

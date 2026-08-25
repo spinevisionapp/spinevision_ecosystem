@@ -79,13 +79,97 @@ class _VisionHubScreenState extends State<VisionHubScreen> {
             unselectedLabelColor: Colors.white70,
           ),
         ),
+        drawer: _buildNavigationDrawer(context, tier),
         body: TabBarView(
           children: [
             _buildInsightsTab(tier),
             _buildInventoryTab(repository),
           ],
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => context.push('/omni_vision'),
+          label: const Text('SCAN'),
+          icon: const Icon(Icons.camera_alt),
+          backgroundColor: AppColors.secondary,
+        ),
       ),
+    );
+  }
+
+  Widget _buildNavigationDrawer(BuildContext context, String tier) {
+    return Drawer(
+      child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+            decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
+            accountName: const Text('SpineVision User', style: TextStyle(fontWeight: FontWeight.bold)),
+            accountEmail: Text('Tier: $tier'),
+            currentAccountPicture: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: AppColors.primary, size: 40),
+            ),
+          ),
+          _buildDrawerItem(context, 'OmniVision', Icons.camera_alt, '/omni_vision', 'Acquisition Engine'),
+          _buildDrawerItem(context, 'NexusVision', Icons.hub, '/library_vision', 'Inventory Management'),
+          _buildDrawerItem(context, 'OperateVision', Icons.business_center, '/listing_vision', 'Marketplace & Sales', isEnterprise: true),
+          _buildDrawerItem(context, 'DashVision', Icons.analytics, '/', 'Intelligence Preview (Active)'),
+          const Divider(),
+          _buildDrawerItem(context, 'Support', Icons.help_outline, '/support_vision', 'AI Help & Tickets'),
+          _buildDrawerItem(context, 'Marketing', Icons.share, '/marketing_vision', 'Social Content', isPro: true),
+          const Spacer(),
+          if (tier == 'Hobbyist')
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                onPressed: () => context.push('/upgrade'),
+                icon: const Icon(Icons.star, color: Colors.amber),
+                label: const Text('UPGRADE TO PRO'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+              ),
+            ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+               Navigator.pop(context);
+               context.push('/upgrade'); // Redirecting settings to upgrade/profile for now
+            },
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(BuildContext context, String title, IconData icon, String route, String subtitle, {bool isPro = false, bool isEnterprise = false}) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary),
+      title: Row(
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          if (isPro) const SizedBox(width: 8),
+          if (isPro) _buildTierTag('PRO', Colors.amber),
+          if (isEnterprise) const SizedBox(width: 8),
+          if (isEnterprise) _buildTierTag('ENTERPRISE', Colors.deepPurple),
+        ],
+      ),
+      subtitle: Text(subtitle, style: const TextStyle(fontSize: 10)),
+      onTap: () {
+        Navigator.pop(context);
+        if (route != '/') context.push(route);
+      },
+    );
+  }
+
+  Widget _buildTierTag(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+      child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
     );
   }
 

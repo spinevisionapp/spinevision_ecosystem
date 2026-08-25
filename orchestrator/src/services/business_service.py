@@ -2,6 +2,7 @@ import logging
 import json
 from .ai import model
 from .vision_service import generate_json_with_retry, download_image_to_temp
+from ..models import schemas
 
 logger = logging.getLogger("spinevision.business")
 

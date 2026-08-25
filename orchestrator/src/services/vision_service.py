@@ -7,6 +7,7 @@ import json
 from google.cloud import storage
 from .firebase import db, storage_client
 from .ai import model
+from ..models import schemas
 
 logger = logging.getLogger("spinevision.vision")
 
