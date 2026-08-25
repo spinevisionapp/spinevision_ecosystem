@@ -17,7 +17,9 @@ from .services import (
     marketing_service, 
     support_service, 
     business_service, 
-    membership_service
+    membership_service,
+    amazon_service,
+    finance_service
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -57,6 +59,13 @@ class BuyDecisionRequest(BaseModel):
 
 class ChatRequest(BaseModel):
     question: str
+
+class AmazonAuthRequest(BaseModel):
+    auth_code: str
+
+class MileageRequest(BaseModel):
+    distance: float
+    purpose: str
 
 # --- Endpoints ---
 
@@ -115,6 +124,29 @@ async def check_promotions(user_id: str = Depends(get_user_id)):
         return {"status": "skipped", "reason": "No user ID provided."}
     result = membership_service.check_milestones(user_id)
     return {"status": "checked", "result": result}
+
+# --- Phase 2: Amazon SP-API ---
+@app.get("/auth/amazon/url")
+async def get_amazon_auth_url():
+    return {"url": amazon_service.amazon_service.get_oauth_url()}
+
+@app.post("/auth/amazon/callback")
+async def amazon_callback(req: AmazonAuthRequest, user_id: str = Depends(get_user_id)):
+    tokens = await amazon_service.amazon_service.exchange_code_for_token(req.auth_code)
+    # Store tokens in Firestore users/uid/settings/amazon_tokens
+    return {"status": "authenticated", "tokens": tokens}
+
+# --- Phase 2: Finance & P&L ---
+@app.get("/analytics/pl_report")
+async def get_pl_report(month: int, year: int, user_id: str = Depends(get_user_id)):
+    tier = membership_service.get_user_tier(user_id)
+    if tier != "Enterprise":
+         raise HTTPException(status_code=403, detail="P&L Reports restricted to Enterprise.")
+    return await finance_service.finance_service.get_pl_report(user_id, month, year)
+
+@app.post("/track_mileage")
+async def track_mileage(req: MileageRequest, user_id: str = Depends(get_user_id)):
+    return await finance_service.finance_service.track_mileage(user_id, req.distance, req.purpose)
 
 # --- Support Portal (HTML) ---
 @app.get("/faq", response_class=HTMLResponse)

@@ -68,7 +68,7 @@ SpineVision is the definitive "OS for Resellers"—a high-performance ecosystem 
 - [ ] **SocialVision Beta:** Multi-platform automated posting (TikTok/Instagram).
 
 ### PHASE 3: PREDICTIVE DOMINANCE (FUTURE)
-- [ ] **ForecastVision:** Predictive seasonal demand modeling.
+- [ ] **ForecastVision:** Predictive seasonal demand model
 - [ ] **VisionLocate:** AR-guided warehouse picking.
 - [ ] **Direct-to-Collector:** P2P marketplace for verified rare finds.
 

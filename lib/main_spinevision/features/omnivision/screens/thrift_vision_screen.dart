@@ -13,6 +13,7 @@ class ThriftVisionScreen extends StatefulWidget {
 
 class _ThriftVisionScreenState extends State<ThriftVisionScreen> {
   bool _isScanning = false;
+  bool _isSpatialMode = false;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _processImage(XFile image) async {
@@ -154,7 +155,21 @@ class _ThriftVisionScreenState extends State<ThriftVisionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: const Text('OmniVision: Fast Scan')),
+      appBar: AppBar(
+        title: Text(_isSpatialMode ? 'SpatialVision AR' : 'OmniVision: Fast Scan'),
+        actions: [
+          Row(
+            children: [
+              const Text('SPATIAL', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+              Switch(
+                value: _isSpatialMode,
+                onChanged: (v) => setState(() => _isSpatialMode = v),
+                activeColor: AppTheme.secondaryTeal,
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           const Center(
@@ -163,6 +178,7 @@ class _ThriftVisionScreenState extends State<ThriftVisionScreen> {
               style: TextStyle(color: Colors.white),
             ),
           ),
+          if (_isSpatialMode) _buildSpatialOverlay(),
           if (_isScanning)
             const Center(
               child: CircularProgressIndicator(color: AppTheme.secondaryTeal),
@@ -174,8 +190,59 @@ class _ThriftVisionScreenState extends State<ThriftVisionScreen> {
         onPressed: _isScanning
             ? null
             : () => _showImageSourceSelection(context),
-        backgroundColor: AppTheme.secondaryTeal,
-        child: const Icon(Icons.camera_alt, size: 40),
+        backgroundColor: _isSpatialMode ? AppTheme.primaryPurple : AppTheme.secondaryTeal,
+        child: Icon(_isSpatialMode ? Icons.auto_awesome : Icons.camera_alt, size: 40),
+      ),
+    );
+  }
+
+  Widget _buildSpatialOverlay() {
+    return Positioned.fill(
+      child: Stack(
+        children: [
+          // Simulated "Buy" target
+          Center(
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green.withValues(alpha: 0.5), width: 2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+          // HUD Elements
+          Positioned(
+            top: 100,
+            left: 20,
+            child: _buildHudElement('PROFIT: +$14.50', Colors.green),
+          ),
+          Positioned(
+            top: 140,
+            left: 20,
+            child: _buildHudElement('DEMAND: HIGH', Colors.blue),
+          ),
+          Positioned(
+            bottom: 150,
+            right: 20,
+            child: _buildHudElement('AMAZON: ELIGIBLE', AppTheme.primaryPurple),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHudElement(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color, width: 1),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.1),
       ),
     );
   }

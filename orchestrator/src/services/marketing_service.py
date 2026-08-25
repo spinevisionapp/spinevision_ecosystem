@@ -2,6 +2,7 @@ import logging
 import datetime
 from .ai import model
 from .vision_service import generate_json_with_retry
+from .social_service import social_service
 
 logger = logging.getLogger("spinevision.marketing")
 
@@ -19,12 +20,21 @@ def generate_weekly_content(analytics_context=None):
         prompt += f"\nContext: {analytics_context}"
     return generate_json_with_retry(prompt)
 
-def run_daily_automation(day, db=None, analytics_data=None):
+async def run_daily_automation(day, db=None, analytics_data=None):
     logger.info(f"Running daily automation for {day}")
-    # Logic to post to social media would go here.
-    # For now, we generate the content and log it.
+    
+    # 1. Generate/Fetch the content for the day
     content = generate_weekly_content(analytics_data)
+    
     if content and day in content:
-        logger.info(f"Automated post for {day}: {content[day]}")
-        return True
+        post_text = content[day]
+        logger.info(f"Automated post for {day}: {post_text}")
+        
+        # 2. Trigger multi-platform broadcast (SocialVision Beta)
+        broadcast_results = await social_service.broadcast_content({"general": post_text})
+        
+        # 3. Log results or update Firestore status
+        if all(broadcast_results.values()):
+            return True
+            
     return False
